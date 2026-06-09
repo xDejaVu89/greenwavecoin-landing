@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
-const GITHUB_RELEASES_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/latest";
+const DOWNLOAD_EXE_URL = "/manus-storage/GreenWaveCoin-Worker_d463c2dc.exe";
 const GWC_TOKEN = "0x6D938b4C48300A29905FBa272cCdC1207538865f";
 const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
 const CHAIN_NAME = "Polygon Amoy Testnet";
@@ -259,7 +259,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <a href={GITHUB_RELEASES_URL} target="_blank" rel="noopener noreferrer">
+              <a href={DOWNLOAD_EXE_URL} download="GreenWaveCoin-Worker.exe">
                 <Button size="lg" className="gap-2 font-semibold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}>
                   Download for Windows <ArrowRight size={18} />
                 </Button>
@@ -456,9 +456,8 @@ export default function Home() {
 
               {/* ── Primary Download CTA ── */}
               <a
-                href={GITHUB_RELEASES_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={DOWNLOAD_EXE_URL}
+                download="GreenWaveCoin-Worker.exe"
                 className="flex items-center gap-4 rounded-2xl p-5 mb-6 transition-all duration-200 hover:scale-[1.02] active:scale-[0.99]"
                 style={{
                   background: "linear-gradient(135deg, rgba(6,182,212,0.15), rgba(16,185,129,0.15))",
