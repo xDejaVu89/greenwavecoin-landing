@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
-const DOWNLOAD_EXE_URL = "/manus-storage/GreenWaveCoin-Worker_d463c2dc.exe";
+const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.0/GreenWaveCoin-Worker.exe";
+const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
 const GWC_TOKEN = "0x6D938b4C48300A29905FBa272cCdC1207538865f";
 const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
 const CHAIN_NAME = "Polygon Amoy Testnet";
@@ -264,6 +265,13 @@ export default function Home() {
                   Download for Windows <ArrowRight size={18} />
                 </Button>
               </a>
+              <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: "#475569" }}>
+                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.0</span>
+                <span>·</span>
+                <span>11 MB</span>
+                <span>·</span>
+                <span>Windows 10+</span>
+              </div>
               <a href="#how-it-works">
                 <Button size="lg" variant="outline" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "rgba(6, 182, 212, 0.05)" }}>
                   How It Works <ChevronRight size={18} />
@@ -471,7 +479,11 @@ export default function Home() {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.0</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(100,116,139,0.15)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.2)" }}>11 MB</span>
+                  </div>
                   <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
                 </div>
                 <div className="flex-shrink-0">
@@ -482,7 +494,7 @@ export default function Home() {
               {/* ── Steps ── */}
               <div className="space-y-3 mb-6">
                 {[
-                  { n: "1", title: "Download the app", desc: "Click the button above to get the .exe from GitHub Releases." },
+                  { n: "1", title: "Download the app", desc: "Click the button above — the .exe downloads immediately (11 MB, no install needed)." },
                   { n: "2", title: "Enter your wallet", desc: "Paste your Ethereum address — rewards go here on Polygon." },
                   { n: "3", title: "Click Start Worker", desc: "Your PC begins training AI models and earning GWC automatically." },
                 ].map(s => (
@@ -522,12 +534,30 @@ export default function Home() {
             </div>
 
             <div className="space-y-6">
-              <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663681352275/7AUMafBNxaAid4r9BoRGkg/gwc-worker-illustration-iYSwWgHTX7CmiWf2X6fVXH.webp"
-                alt="Worker node illustration"
-                className="w-full rounded-2xl"
-                style={{ border: "1px solid rgba(6, 182, 212, 0.2)" }}
-              />
+              {/* App demo screenshot */}
+              <div className="relative">
+                <img
+                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663681352275/7AUMafBNxaAid4r9BoRGkg/gwc-worker-screenshot-RTajZKyu8p4RZSSjuvYYdi.webp"
+                  alt="GreenWaveCoin Worker app running on Windows"
+                  className="w-full rounded-2xl shadow-2xl"
+                  style={{ border: "1px solid rgba(6, 182, 212, 0.25)" }}
+                />
+                <div className="absolute top-3 right-3 text-xs px-2 py-1 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.9)", color: "#020b18" }}>
+                  Live Preview
+                </div>
+              </div>
+              {/* SHA-256 checksum */}
+              <div className="glass-card rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="#10b981" opacity="0.8"/></svg>
+                  <span className="text-xs font-semibold" style={{ color: "#10b981" }}>SHA-256 Checksum</span>
+                  <span className="text-xs ml-auto" style={{ color: "#475569" }}>Verify file integrity</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="text-xs break-all flex-1" style={{ color: "#64748b", fontFamily: "JetBrains Mono, monospace" }}>{EXE_SHA256}</code>
+                  <CopyButton text={EXE_SHA256} />
+                </div>
+              </div>
 
               {/* Contract info card */}
               <div className="glass-card rounded-2xl p-6">
