@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Cpu, Trophy, Zap, Globe, ChevronRight, Copy, Check,
-  Activity, Users, BarChart3, Layers, ArrowRight, Github, ExternalLink
+  Activity, Users, BarChart3, Layers, ArrowRight, Github, ExternalLink,
+  Target, Coins, ShieldCheck, TrendingUp, Leaf, Network
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
@@ -216,6 +217,7 @@ export default function Home() {
             <span className="font-display font-bold text-lg" style={{ fontFamily: "Syne, sans-serif" }}>GreenWaveCoin</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm" style={{ color: "#94a3b8" }}>
+            <a href="#about" className="hover:text-[#06b6d4] transition-colors">About</a>
             <a href="#how-it-works" className="hover:text-[#06b6d4] transition-colors">How It Works</a>
             <a href="#stats" className="hover:text-[#06b6d4] transition-colors">Network</a>
             <a href="#leaderboard" className="hover:text-[#06b6d4] transition-colors">Leaderboard</a>
@@ -302,6 +304,153 @@ export default function Home() {
               </div>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* ── About ── */}
+      <section id="about" className="py-24" style={{ background: "linear-gradient(to bottom, #020b18, #071428)" }}>
+        <div className="container">
+
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
+              Our Mission
+            </Badge>
+            <h2 className="font-display font-bold text-4xl mb-5" style={{ fontFamily: "Syne, sans-serif" }}>
+              What We're Building
+            </h2>
+            <p className="text-lg max-w-3xl mx-auto leading-relaxed" style={{ color: "#94a3b8" }}>
+              GreenWaveCoin is an open, decentralised network that turns idle consumer hardware into a
+              global AI research engine. We believe the next breakthrough in neural architecture design
+              shouldn't be locked behind the compute budgets of a handful of corporations — it should
+              emerge from millions of contributors working together, rewarded fairly and transparently
+              on-chain.
+            </p>
+          </div>
+
+          {/* Mission pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 stagger-children">
+            {[
+              {
+                icon: <Target size={22} />,
+                color: "#06b6d4",
+                title: "Democratise AI Research",
+                desc: "Remove the compute monopoly. Anyone with a PC can contribute to cutting-edge neural architecture search and share in the discoveries.",
+              },
+              {
+                icon: <Leaf size={22} />,
+                color: "#10b981",
+                title: "Greener by Design",
+                desc: "Workers run on hardware that's already powered on. We maximise the research output per watt by targeting idle cycles rather than spinning up dedicated data centres.",
+              },
+              {
+                icon: <Network size={22} />,
+                color: "#06b6d4",
+                title: "Fully Transparent",
+                desc: "Every reward epoch, every task hash, and every token distribution is recorded on Polygon. No black boxes — the entire reward pipeline is auditable by anyone.",
+              },
+            ].map(p => (
+              <div key={p.title} className="glass-card rounded-2xl p-8 animate-fade-up">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: `rgba(${p.color === "#06b6d4" ? "6, 182, 212" : "16, 185, 129"}, 0.1)`, color: p.color }}
+                >
+                  {p.icon}
+                </div>
+                <h3 className="font-display font-semibold text-lg mb-2" style={{ fontFamily: "Syne, sans-serif" }}>{p.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* GWC Coin perks */}
+          <div className="mb-6 text-center">
+            <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>
+              GWC Token Perks
+            </Badge>
+            <h2 className="font-display font-bold text-4xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
+              Why GWC Has Real Value
+            </h2>
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: "#94a3b8" }}>
+              GWC isn't a speculative memecoin. Every token is backed by verifiable compute work
+              and tied to a growing ecosystem of utility.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+            {[
+              {
+                icon: <Coins size={20} />,
+                color: "#10b981",
+                title: "Earn by Contributing",
+                desc: "Every completed and verified task earns GWC. Rewards scale with both task volume and accuracy score — better results, bigger share.",
+                tag: "Core Utility",
+              },
+              {
+                icon: <ShieldCheck size={20} />,
+                color: "#06b6d4",
+                title: "Cryptographic Proof of Work",
+                desc: "Results are verified with SHA-256 hashes before any reward is issued. Fake submissions are rejected at the protocol level — no governance vote needed.",
+                tag: "Security",
+              },
+              {
+                icon: <TrendingUp size={20} />,
+                color: "#10b981",
+                title: "Epoch-Based Distribution",
+                desc: "Rewards are batched every 24 hours via a Merkle proof system. Gas costs stay low and distributions are trustlessly verifiable on-chain.",
+                tag: "Tokenomics",
+              },
+              {
+                icon: <Globe size={20} />,
+                color: "#06b6d4",
+                title: "Polygon-Powered",
+                desc: "Built on Polygon for near-zero transaction fees and fast finality. Claim rewards without burning more in gas than you earned.",
+                tag: "Infrastructure",
+              },
+              {
+                icon: <Users size={20} />,
+                color: "#10b981",
+                title: "Community Governed",
+                desc: "GWC holders will vote on network parameters — task types, reward weights, and future research directions — as the protocol matures.",
+                tag: "Governance",
+              },
+              {
+                icon: <Zap size={20} />,
+                color: "#06b6d4",
+                title: "Open Source Forever",
+                desc: "The coordinator, worker client, and smart contracts are fully open source. Fork it, audit it, build on it — the network belongs to its contributors.",
+                tag: "Transparency",
+              },
+            ].map(perk => (
+              <div
+                key={perk.title}
+                className="glass-card rounded-2xl p-6 animate-fade-up flex flex-col gap-3"
+                style={{ border: `1px solid rgba(${perk.color === "#06b6d4" ? "6, 182, 212" : "16, 185, 129"}, 0.12)` }}
+              >
+                <div className="flex items-center justify-between">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: `rgba(${perk.color === "#06b6d4" ? "6, 182, 212" : "16, 185, 129"}, 0.1)`, color: perk.color }}
+                  >
+                    {perk.icon}
+                  </div>
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{
+                      background: `rgba(${perk.color === "#06b6d4" ? "6, 182, 212" : "16, 185, 129"}, 0.1)`,
+                      color: perk.color,
+                      border: `1px solid rgba(${perk.color === "#06b6d4" ? "6, 182, 212" : "16, 185, 129"}, 0.25)`,
+                    }}
+                  >
+                    {perk.tag}
+                  </span>
+                </div>
+                <h3 className="font-display font-semibold" style={{ fontFamily: "Syne, sans-serif" }}>{perk.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{perk.desc}</p>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
