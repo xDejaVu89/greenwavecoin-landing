@@ -12,7 +12,7 @@ import {
   Activity, Users, BarChart3, Layers, ArrowRight, Github, ExternalLink
 } from "lucide-react";
 
-const COORDINATOR_URL = "http://206.81.5.13:3000";
+const COORDINATOR_URL = "https://206.81.5.13.nip.io";
 const GWC_TOKEN = "0x6D938b4C48300A29905FBa272cCdC1207538865f";
 const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
 const CHAIN_NAME = "Polygon Amoy Testnet";
