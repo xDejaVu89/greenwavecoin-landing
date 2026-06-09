@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -193,6 +194,10 @@ function useLeaderboard() {
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const stats = useNetworkStats();
   const leaders = useLeaderboard();
 
