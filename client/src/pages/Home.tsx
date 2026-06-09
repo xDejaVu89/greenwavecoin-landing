@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
+const GITHUB_RELEASES_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/latest";
 const GWC_TOKEN = "0x6D938b4C48300A29905FBa272cCdC1207538865f";
 const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
 const CHAIN_NAME = "Polygon Amoy Testnet";
@@ -212,7 +213,7 @@ export default function Home() {
             <a href="#how-it-works" className="hover:text-[#06b6d4] transition-colors">How It Works</a>
             <a href="#stats" className="hover:text-[#06b6d4] transition-colors">Network</a>
             <a href="#leaderboard" className="hover:text-[#06b6d4] transition-colors">Leaderboard</a>
-            <a href="#run-worker" className="hover:text-[#06b6d4] transition-colors">Run a Worker</a>
+            <a href="#run-worker" className="hover:text-[#06b6d4] transition-colors">Download</a>
           </div>
           <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "transparent" }}>
@@ -258,9 +259,9 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <a href="#run-worker">
+              <a href={GITHUB_RELEASES_URL} target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="gap-2 font-semibold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}>
-                  Run a Worker <ArrowRight size={18} />
+                  Download for Windows <ArrowRight size={18} />
                 </Button>
               </a>
               <a href="#how-it-works">
@@ -437,7 +438,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Run a Worker ── */}
+            {/* ── Run a Worker ── */}
       <section id="run-worker" className="py-20" style={{ background: "#020b18" }}>
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -446,34 +447,79 @@ export default function Home() {
                 Get Started
               </Badge>
               <h2 className="font-display font-bold text-4xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
-                Run a Worker in{" "}
-                <span className="text-gradient-cyan-emerald">3 Steps</span>
+                Start Earning{" "}
+                <span className="text-gradient-cyan-emerald">in 2 Clicks</span>
               </h2>
-              <p className="text-lg mb-8 leading-relaxed" style={{ color: "#64748b" }}>
-                Anyone with a PC and Python installed can join the network. Your computer earns GWC
-                while you sleep, work, or browse the web.
+              <p className="text-lg mb-6 leading-relaxed" style={{ color: "#64748b" }}>
+                Download the free Windows app, enter your wallet address, and click Start. No Python, no terminal, no setup.
               </p>
 
-              <div className="space-y-4">
+              {/* ── Primary Download CTA ── */}
+              <a
+                href={GITHUB_RELEASES_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 rounded-2xl p-5 mb-6 transition-all duration-200 hover:scale-[1.02] active:scale-[0.99]"
+                style={{
+                  background: "linear-gradient(135deg, rgba(6,182,212,0.15), rgba(16,185,129,0.15))",
+                  border: "1px solid rgba(6, 182, 212, 0.4)",
+                  textDecoration: "none",
+                }}
+              >
+                <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)" }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 19h18v2H3v-2zm9-3L4 8h5V2h6v6h5l-8 8z" fill="#020b18"/>
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
+                  <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
+                </div>
+                <div className="flex-shrink-0">
+                  <ChevronRight size={20} style={{ color: "#06b6d4" }} />
+                </div>
+              </a>
+
+              {/* ── Steps ── */}
+              <div className="space-y-3 mb-6">
                 {[
-                  { n: "1", title: "Clone the repository", cmd: "git clone https://github.com/xDejaVu89/greenwavecoin" },
-                  { n: "2", title: "Install dependencies", cmd: "cd greenwavecoin/ai-worker && pip install -r requirements.txt" },
-                  { n: "3", title: "Run the worker", cmd: `python worker.py --backend ${COORDINATOR_URL} --wallet YOUR_WALLET_ADDRESS` },
+                  { n: "1", title: "Download the app", desc: "Click the button above to get the .exe from GitHub Releases." },
+                  { n: "2", title: "Enter your wallet", desc: "Paste your Ethereum address — rewards go here on Polygon." },
+                  { n: "3", title: "Click Start Worker", desc: "Your PC begins training AI models and earning GWC automatically." },
                 ].map(s => (
-                  <div key={s.n} className="glass-card rounded-xl p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18" }}>
-                        {s.n}
-                      </div>
-                      <span className="font-display font-semibold text-sm" style={{ fontFamily: "Syne, sans-serif" }}>{s.title}</span>
+                  <div key={s.n} className="flex gap-4 items-start">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mt-0.5" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18" }}>
+                      {s.n}
                     </div>
-                    <div className="flex items-center justify-between rounded-lg px-4 py-3" style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(6, 182, 212, 0.1)" }}>
-                      <code className="text-xs break-all" style={{ color: "#06b6d4", fontFamily: "JetBrains Mono, monospace" }}>{s.cmd}</code>
-                      <CopyButton text={s.cmd} />
+                    <div>
+                      <div className="font-semibold text-sm" style={{ color: "#ccd6f6", fontFamily: "Syne, sans-serif" }}>{s.title}</div>
+                      <div className="text-sm" style={{ color: "#64748b" }}>{s.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* ── Advanced / CLI toggle ── */}
+              <details className="glass-card rounded-xl p-4">
+                <summary className="cursor-pointer text-sm font-semibold select-none" style={{ color: "#8892b0", fontFamily: "Syne, sans-serif" }}>
+                  Advanced: run from source (Python / Linux / Mac)
+                </summary>
+                <div className="mt-4 space-y-3">
+                  {[
+                    { n: "1", title: "Clone the repository", cmd: "git clone https://github.com/xDejaVu89/greenwavecoin" },
+                    { n: "2", title: "Install dependencies", cmd: "cd greenwavecoin/ai-worker && pip install -r requirements.txt" },
+                    { n: "3", title: "Run the worker", cmd: `python worker.py --backend ${COORDINATOR_URL} --wallet YOUR_WALLET_ADDRESS` },
+                  ].map(s => (
+                    <div key={s.n} className="rounded-lg p-4" style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(6, 182, 212, 0.1)" }}>
+                      <div className="text-xs font-semibold mb-2" style={{ color: "#8892b0" }}>{s.n}. {s.title}</div>
+                      <div className="flex items-center justify-between gap-2">
+                        <code className="text-xs break-all" style={{ color: "#06b6d4", fontFamily: "JetBrains Mono, monospace" }}>{s.cmd}</code>
+                        <CopyButton text={s.cmd} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
             </div>
 
             <div className="space-y-6">
