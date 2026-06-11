@@ -6,12 +6,14 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Cpu, Trophy, Zap, Globe, ChevronRight, Copy, Check,
   Activity, Users, BarChart3, Layers, ArrowRight, Github, ExternalLink,
-  Target, Coins, ShieldCheck, TrendingUp, Leaf, Network
+  Target, Coins, ShieldCheck, TrendingUp, Leaf, Network,
+  CheckCircle2, Clock, ChevronDown, ChevronUp, Menu, X
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
@@ -193,6 +195,137 @@ function useLeaderboard() {
   return leaders;
 }
 
+// ─── Waitlist Section ─────────────────────────────────────────────────────────
+function WaitlistSection() {
+  const [wallet, setWallet] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [position, setPosition] = useState<number | null>(null);
+  const [error, setError] = useState("");
+
+  const { data: countData } = trpc.waitlist.count.useQuery();
+  const joinMutation = trpc.waitlist.join.useMutation({
+    onSuccess: (data) => {
+      setSubmitted(true);
+      setPosition(data.position);
+      setError("");
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    joinMutation.mutate({ walletAddress: wallet, email: email || undefined });
+  };
+
+  return (
+    <section id="waitlist" className="py-24" style={{ background: "linear-gradient(to bottom, #071428, #020b18)" }}>
+      <div className="container">
+        <div className="max-w-2xl mx-auto text-center">
+          <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>Early Access</Badge>
+          <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
+            Join the{" "}
+            <span style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Waitlist</span>
+          </h2>
+          <p className="text-lg mb-3" style={{ color: "#64748b" }}>
+            Register your wallet now to be first in line when mainnet rewards go live. No spam, no obligations.
+          </p>
+          {countData && countData.count > 0 && (
+            <p className="text-sm mb-8 font-mono" style={{ color: "#06b6d4" }}>
+              {countData.count.toLocaleString()} wallet{countData.count !== 1 ? "s" : ""} already registered
+            </p>
+          )}
+
+          {submitted ? (
+            <div className="rounded-2xl p-8" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.3)" }}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(16,185,129,0.15)" }}>
+                <CheckCircle2 size={32} className="text-[#10b981]" />
+              </div>
+              <h3 className="font-bold text-2xl mb-2" style={{ fontFamily: "Syne, sans-serif", color: "#f0f9ff" }}>You're on the list!</h3>
+              <p className="text-sm" style={{ color: "#64748b" }}>
+                You're number <span className="font-bold" style={{ color: "#10b981" }}>#{position}</span> on the waitlist.
+                We'll notify you when mainnet rewards go live.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Your Polygon wallet address (0x...)"
+                  value={wallet}
+                  onChange={e => setWallet(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  style={{
+                    background: "rgba(7,20,40,0.8)",
+                    border: "1px solid rgba(6,182,212,0.3)",
+                    color: "#f0f9ff",
+                    fontFamily: "JetBrains Mono, monospace",
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email address (optional — for launch notifications)"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  style={{
+                    background: "rgba(7,20,40,0.8)",
+                    border: "1px solid rgba(51,65,85,0.4)",
+                    color: "#f0f9ff",
+                  }}
+                />
+              </div>
+              {error && (
+                <p className="text-sm" style={{ color: "#f87171" }}>{error}</p>
+              )}
+              <Button
+                type="submit"
+                disabled={joinMutation.isPending}
+                className="w-full h-12 text-base font-semibold"
+                style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}
+              >
+                {joinMutation.isPending ? "Registering..." : "Reserve My Spot"}
+              </Button>
+              <p className="text-xs" style={{ color: "#475569" }}>
+                Your wallet address is stored securely and never shared. You can withdraw at any time.
+              </p>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── FAQ Item ────────────────────────────────────────────────────────────────
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="rounded-xl overflow-hidden cursor-pointer"
+      style={{ background: "rgba(7,20,40,0.8)", border: `1px solid ${open ? "rgba(6,182,212,0.3)" : "rgba(51,65,85,0.4)"}`, transition: "border-color 0.2s" }}
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-center justify-between gap-4 p-5">
+        <span className="font-semibold text-sm md:text-base" style={{ color: "#f0f9ff" }}>{question}</span>
+        {open ? <ChevronUp size={18} style={{ color: "#06b6d4", flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: "#475569", flexShrink: 0 }} />}
+      </div>
+      {open && (
+        <div className="px-5 pb-5">
+          <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function Home() {
   // The userAuth hooks provides authentication state
@@ -201,11 +334,36 @@ export default function Home() {
 
   const stats = useNetworkStats();
   const leaders = useLeaderboard();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const scrolled = el.scrollTop;
+      const total = el.scrollHeight - el.clientHeight;
+      setScrollProgress(total > 0 ? (scrolled / total) * 100 : 0);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const truncate = (addr: string) => addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "—";
+  const navLinks = [
+    { href: "#about", label: "About" },
+    { href: "#how-it-works", label: "How It Works" },
+    { href: "#roadmap", label: "Roadmap" },
+    { href: "#stats", label: "Network" },
+    { href: "#tokenomics", label: "Tokenomics" },
+    { href: "#waitlist", label: "Waitlist" },
+    { href: "#run-worker", label: "Download" },
+  ];
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#020b18", color: "#f0f9ff" }}>
+
+      {/* ── Scroll Progress Bar ── */}
+      <div className="fixed top-0 left-0 z-[60] h-0.5" style={{ width: `${scrollProgress}%`, background: "linear-gradient(90deg, #06b6d4, #10b981)", transition: "width 0.1s linear" }} />
 
       {/* ── Navigation ── */}
       <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: "rgba(2, 11, 24, 0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(6, 182, 212, 0.1)" }}>
@@ -217,18 +375,49 @@ export default function Home() {
             <span className="font-display font-bold text-lg" style={{ fontFamily: "Syne, sans-serif" }}>GreenWaveCoin</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm" style={{ color: "#94a3b8" }}>
-            <a href="#about" className="hover:text-[#06b6d4] transition-colors">About</a>
-            <a href="#how-it-works" className="hover:text-[#06b6d4] transition-colors">How It Works</a>
-            <a href="#stats" className="hover:text-[#06b6d4] transition-colors">Network</a>
-            <a href="#leaderboard" className="hover:text-[#06b6d4] transition-colors">Leaderboard</a>
-            <a href="#run-worker" className="hover:text-[#06b6d4] transition-colors">Download</a>
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} className="hover:text-[#06b6d4] transition-colors">{l.label}</a>
+            ))}
           </div>
-          <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "transparent" }}>
-              <Github size={15} /> GitHub
-            </Button>
-          </a>
+          <div className="flex items-center gap-3">
+            <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="hidden md:block">
+              <Button variant="outline" size="sm" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "transparent" }}>
+                <Github size={15} /> GitHub
+              </Button>
+            </a>
+            {/* Hamburger — mobile only */}
+            <button
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
+              style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileNavOpen ? <X size={18} style={{ color: "#06b6d4" }} /> : <Menu size={18} style={{ color: "#06b6d4" }} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile drawer */}
+        {mobileNavOpen && (
+          <div className="md:hidden" style={{ background: "rgba(2,11,24,0.97)", borderTop: "1px solid rgba(6,182,212,0.1)" }}>
+            <div className="container py-4 flex flex-col gap-1">
+              {navLinks.map(l => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className="py-3 px-2 text-sm rounded-lg hover:text-[#06b6d4] transition-colors"
+                  style={{ color: "#94a3b8", borderBottom: "1px solid rgba(51,65,85,0.3)" }}
+                  onClick={() => setMobileNavOpen(false)}
+                >{l.label}</a>
+              ))}
+              <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="mt-2">
+                <Button variant="outline" size="sm" className="gap-2 w-full" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "transparent" }}>
+                  <Github size={15} /> View on GitHub
+                </Button>
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero ── */}
@@ -600,6 +789,181 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Roadmap ── */}
+      <section id="roadmap" className="py-24" style={{ background: "linear-gradient(to bottom, #071428, #020b18)" }}>
+        <div className="container">
+          <div className="text-center mb-16">
+            <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>Roadmap</Badge>
+            <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
+              Where We're{" "}
+              <span style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Headed</span>
+            </h2>
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: "#64748b" }}>
+              A transparent view of milestones — completed, in progress, and on the horizon.
+            </p>
+          </div>
+
+          {/* Timeline */}
+          <div className="relative max-w-3xl mx-auto">
+            {/* Vertical line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(to bottom, #06b6d4, rgba(6,182,212,0.1))" }} />
+
+            {[
+              { status: "done", label: "Completed", title: "Testnet Launch", desc: "Worker client deployed, coordinator live, first epoch rewards distributed on Polygon Amoy Testnet.", date: "Q1 2025" },
+              { status: "done", label: "Completed", title: "Open Source Release", desc: "Full source code published on GitHub. Smart contracts verified on Polygonscan.", date: "Q2 2025" },
+              { status: "active", label: "In Progress", title: "Community Growth", desc: "Expanding the worker network, applying for ecosystem grants, building the leaderboard and dashboard.", date: "Q3 2025" },
+              { status: "upcoming", label: "Upcoming", title: "Mainnet Launch", desc: "Migration from Amoy Testnet to Polygon Mainnet. Real token value, real rewards.", date: "Q4 2025" },
+              { status: "upcoming", label: "Upcoming", title: "Governance Module", desc: "GWC holders vote on network parameters: reward weights, epoch length, research directions.", date: "Q1 2026" },
+              { status: "upcoming", label: "Upcoming", title: "CEX / DEX Listing", desc: "List GWC on decentralised exchanges (Uniswap, QuickSwap) and pursue centralised exchange listings.", date: "Q2 2026" },
+              { status: "upcoming", label: "Upcoming", title: "Mobile Worker App", desc: "Lightweight Android/iOS app that contributes idle compute to the network while your phone charges.", date: "2026" },
+            ].map((item, i) => (
+              <div key={i} className={`relative flex gap-6 md:gap-0 mb-12 ${
+                i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              }`}>
+                {/* Node */}
+                <div className="absolute left-6 md:left-1/2 -translate-x-1/2 z-10 flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
+                    item.status === "done"
+                      ? "border-[#10b981] bg-[#10b981]/20"
+                      : item.status === "active"
+                      ? "border-[#06b6d4] bg-[#06b6d4]/20"
+                      : "border-[#334155] bg-[#0f172a]"
+                  }`} style={item.status === "active" ? { boxShadow: "0 0 20px rgba(6,182,212,0.4)" } : {}}>
+                    {item.status === "done" ? (
+                      <CheckCircle2 size={20} className="text-[#10b981]" />
+                    ) : item.status === "active" ? (
+                      <div className="w-3 h-3 rounded-full bg-[#06b6d4] animate-pulse" />
+                    ) : (
+                      <Clock size={18} style={{ color: "#475569" }} />
+                    )}
+                  </div>
+                </div>
+
+                {/* Content card */}
+                <div className={`ml-20 md:ml-0 md:w-[45%] ${
+                  i % 2 === 0 ? "md:mr-auto md:pr-12" : "md:ml-auto md:pl-12"
+                }`}>
+                  <div className="rounded-xl p-5" style={{ background: "rgba(7,20,40,0.8)", border: `1px solid ${
+                    item.status === "done" ? "rgba(16,185,129,0.3)" : item.status === "active" ? "rgba(6,182,212,0.3)" : "rgba(51,65,85,0.5)"
+                  }` }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-mono px-2 py-0.5 rounded" style={{
+                        background: item.status === "done" ? "rgba(16,185,129,0.15)" : item.status === "active" ? "rgba(6,182,212,0.15)" : "rgba(51,65,85,0.3)",
+                        color: item.status === "done" ? "#10b981" : item.status === "active" ? "#06b6d4" : "#475569"
+                      }}>{item.label}</span>
+                      <span className="text-xs" style={{ color: "#475569" }}>{item.date}</span>
+                    </div>
+                    <h3 className="font-bold text-lg mb-1" style={{ fontFamily: "Syne, sans-serif", color: "#f0f9ff" }}>{item.title}</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{item.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Tokenomics ── */}
+      <section id="tokenomics" className="py-24" style={{ background: "#020b18" }}>
+        <div className="container">
+          <div className="text-center mb-16">
+            <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>Tokenomics</Badge>
+            <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
+              GWC Token{" "}
+              <span style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Distribution</span>
+            </h2>
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: "#64748b" }}>
+              Designed to reward contributors first. The majority of supply flows directly to the workers who power the network.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+            {/* Donut chart (CSS-based) */}
+            <div className="flex items-center justify-center">
+              <div className="relative w-72 h-72">
+                <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
+                  {/* Reward Pool 60% */}
+                  <circle cx="100" cy="100" r="70" fill="none" stroke="#06b6d4" strokeWidth="28"
+                    strokeDasharray="263.9 175.9" strokeDashoffset="0" />
+                  {/* Community Treasury 20% */}
+                  <circle cx="100" cy="100" r="70" fill="none" stroke="#10b981" strokeWidth="28"
+                    strokeDasharray="87.96 351.9" strokeDashoffset="-263.9" />
+                  {/* Team/Dev 10% */}
+                  <circle cx="100" cy="100" r="70" fill="none" stroke="#8b5cf6" strokeWidth="28"
+                    strokeDasharray="43.98 395.8" strokeDashoffset="-351.9" />
+                  {/* Ecosystem Grants 10% */}
+                  <circle cx="100" cy="100" r="70" fill="none" stroke="#f59e0b" strokeWidth="28"
+                    strokeDasharray="43.98 395.8" strokeDashoffset="-395.8" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl font-bold" style={{ fontFamily: "JetBrains Mono, monospace", color: "#06b6d4" }}>1B</span>
+                  <span className="text-sm" style={{ color: "#64748b" }}>Total Supply</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Allocation breakdown */}
+            <div className="space-y-4">
+              {[
+                { label: "Reward Pool", pct: 60, color: "#06b6d4", desc: "Distributed to workers over time via epoch rewards" },
+                { label: "Community Treasury", pct: 20, color: "#10b981", desc: "Governed by GWC holders for grants and development" },
+                { label: "Team & Development", pct: 10, color: "#8b5cf6", desc: "2-year linear vesting, no cliff" },
+                { label: "Ecosystem Grants", pct: 10, color: "#f59e0b", desc: "Partnerships, integrations, and research bounties" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-4 p-4 rounded-xl" style={{ background: "rgba(7,20,40,0.6)", border: "1px solid rgba(51,65,85,0.4)" }}>
+                  <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: item.color, boxShadow: `0 0 8px ${item.color}` }} />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-sm" style={{ color: "#f0f9ff" }}>{item.label}</span>
+                      <span className="font-mono font-bold" style={{ color: item.color }}>{item.pct}%</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full" style={{ background: "rgba(51,65,85,0.4)" }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${item.pct}%`, background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
+                    </div>
+                    <p className="text-xs mt-1" style={{ color: "#475569" }}>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+
+              <div className="mt-6 p-4 rounded-xl" style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)" }}>
+                <p className="text-sm" style={{ color: "#94a3b8" }}>
+                  <span className="font-semibold" style={{ color: "#06b6d4" }}>Smart contract verified</span> on Polygon Amoy Testnet.{" "}
+                  <a href={POLYGONSCAN_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#06b6d4] transition-colors">View on Polygonscan →</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section id="faq" className="py-24" style={{ background: "linear-gradient(to bottom, #020b18, #071428)" }}>
+        <div className="container">
+          <div className="text-center mb-16">
+            <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>FAQ</Badge>
+            <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
+              Common{" "}
+              <span style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Questions</span>
+            </h2>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-3">
+            {[
+              { q: "Is it safe to run the worker on my PC?", a: "Yes. The worker is open source and only performs mathematical computations — testing neural network configurations. It does not access your files, camera, microphone, or any personal data. The source code is fully auditable on GitHub." },
+              { q: "What hardware do I need?", a: "Any modern CPU will work — no GPU required. The worker is designed to run on standard laptops and desktops. Minimum: 2-core CPU, 2 GB RAM, 200 MB disk space, and a stable internet connection." },
+              { q: "How much GWC can I earn per day?", a: "Earnings depend on your hardware speed, the number of tasks completed, and the total network size. The more tasks you complete per epoch (24 hours), the larger your share of that epoch's reward pool. The leaderboard on this page shows current top earners." },
+              { q: "How are rewards calculated and verified?", a: "After each epoch, the coordinator collects all task results, computes a Merkle root of contributions, and distributes rewards proportionally via the smart contract on Polygon. Every epoch's results are publicly verifiable on-chain." },
+              { q: "When can I trade or sell GWC?", a: "GWC is currently on Polygon Amoy Testnet. Mainnet launch and DEX listing are on the roadmap for Q4 2025. Once live on mainnet, GWC will be tradeable on Uniswap and QuickSwap." },
+              { q: "What is Polygon Amoy Testnet?", a: "Amoy is Polygon's official test network — it uses real infrastructure but testnet tokens have no monetary value yet. This lets us prove the system works before committing to mainnet. All rewards earned now will carry over to mainnet at launch." },
+              { q: "Is GWC open source? Can I audit the code?", a: "Yes. The worker client, coordinator server, and smart contracts are all open source on GitHub. We encourage the community to audit, fork, and contribute." },
+              { q: "How do I claim my rewards?", a: "Rewards are automatically credited to the wallet address you configure in the worker client. After each epoch, the smart contract distributes tokens directly to your wallet — no manual claiming required." },
+            ].map((item, i) => (
+              <FaqItem key={i} question={item.q} answer={item.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
             {/* ── Run a Worker ── */}
       <section id="run-worker" className="py-20" style={{ background: "#020b18" }}>
         <div className="container">
@@ -745,27 +1109,62 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Waitlist ── */}
+      <WaitlistSection />
+
       {/* ── Footer ── */}
-      <footer className="py-12" style={{ borderTop: "1px solid rgba(6, 182, 212, 0.1)", background: "#020b18" }}>
+      <footer className="py-14" style={{ borderTop: "1px solid rgba(6, 182, 212, 0.1)", background: "#020b18" }}>
         <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)" }}>
-                <Zap size={14} className="text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            {/* Brand */}
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)" }}>
+                  <Zap size={14} className="text-white" />
+                </div>
+                <span className="font-bold" style={{ fontFamily: "Syne, sans-serif" }}>GreenWaveCoin</span>
               </div>
-              <span className="font-display font-bold" style={{ fontFamily: "Syne, sans-serif" }}>GreenWaveCoin</span>
+              <p className="text-sm leading-relaxed" style={{ color: "#475569" }}>Distributed AI research network on Polygon. Open source, community governed.</p>
             </div>
-            <p className="text-sm text-center" style={{ color: "#475569" }}>
-              Distributed AI research network on Polygon Amoy Testnet. Open source.
-            </p>
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>
-                <Github size={16} /> Source Code
-              </a>
-              <a href={POLYGONSCAN_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>
-                <ExternalLink size={16} /> Polygonscan
-              </a>
+            {/* Explore */}
+            <div>
+              <p className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: "#334155" }}>Explore</p>
+              <div className="space-y-2">
+                <a href="#about" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>About</a>
+                <a href="#roadmap" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Roadmap</a>
+                <a href="#tokenomics" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Tokenomics</a>
+                <a href="#faq" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>FAQ</a>
+              </div>
             </div>
+            {/* Tools */}
+            <div>
+              <p className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: "#334155" }}>Tools</p>
+              <div className="space-y-2">
+                <a href="/network" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Network Explorer</a>
+                <a href="/dashboard" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Worker Dashboard</a>
+                <a href="/blog" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Blog & Updates</a>
+                <a href="#run-worker" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Download Worker</a>
+              </div>
+            </div>
+            {/* Links */}
+            <div>
+              <p className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: "#334155" }}>Links</p>
+              <div className="space-y-2">
+                <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>
+                  <Github size={13} /> GitHub
+                </a>
+                <a href={POLYGONSCAN_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>
+                  <ExternalLink size={13} /> Polygonscan
+                </a>
+                <a href="#waitlist" className="flex items-center gap-2 text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>
+                  <Zap size={13} /> Join Waitlist
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(51,65,85,0.3)" }}>
+            <p className="text-xs" style={{ color: "#334155" }}>© 2025 GreenWaveCoin. Open source under MIT License.</p>
+            <p className="text-xs" style={{ color: "#334155" }}>Polygon Amoy Testnet — Mainnet coming soon</p>
           </div>
         </div>
       </footer>
