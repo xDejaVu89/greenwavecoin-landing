@@ -58,7 +58,7 @@
 - [x] Footer links to /network, /dashboard, /blog
 
 ## Remaining / Future
-- [ ] Section entrance animations (IntersectionObserver, fade-up on scroll)
+- [x] Section entrance animations (IntersectionObserver, fade-up on scroll)
 - [ ] Server-side coordinator proxy (cache leaderboard in DB for resilience)
 - [ ] "Share your rank" tweet button on dashboard
 - [ ] CONTRIBUTING.md for open source contributors

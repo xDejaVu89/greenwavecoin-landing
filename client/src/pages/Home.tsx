@@ -326,6 +326,27 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+// ─── Scroll Reveal Hook ─────────────────────────────────────────────────────
+function useScrollReveal() {
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s cubic-bezier(0.23,1,0.32,1), transform 0.6s cubic-bezier(0.23,1,0.32,1); }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      @media (prefers-reduced-motion: reduce) { .reveal, .reveal.visible { transition: none; opacity: 1; transform: none; } }
+    `;
+    document.head.appendChild(style);
+
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+    const els = document.querySelectorAll(".reveal");
+    els.forEach(el => observer.observe(el));
+    return () => { observer.disconnect(); document.head.removeChild(style); };
+  }, []);
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function Home() {
   // The userAuth hooks provides authentication state
@@ -336,6 +357,7 @@ export default function Home() {
   const leaders = useLeaderboard();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  useScrollReveal();
 
   useEffect(() => {
     const onScroll = () => {
@@ -501,7 +523,7 @@ export default function Home() {
         <div className="container">
 
           {/* Section header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 reveal">
             <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
               Our Mission
             </Badge>
@@ -646,7 +668,7 @@ export default function Home() {
       {/* ── Stats Band ── */}
       <section id="stats" className="py-20" style={{ background: "linear-gradient(to bottom, #020b18, #071428)" }}>
         <div className="container">
-          <div className="text-center mb-14">
+          <div className="text-center mb-14 reveal">
             <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>
               Live Network Stats
             </Badge>
@@ -679,7 +701,7 @@ export default function Home() {
       {/* ── How It Works ── */}
       <section id="how-it-works" className="py-20" style={{ background: "#071428" }}>
         <div className="container">
-          <div className="text-center mb-14">
+          <div className="text-center mb-14 reveal">
             <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
               The Process
             </Badge>
@@ -792,7 +814,7 @@ export default function Home() {
       {/* ── Roadmap ── */}
       <section id="roadmap" className="py-24" style={{ background: "linear-gradient(to bottom, #071428, #020b18)" }}>
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 reveal">
             <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>Roadmap</Badge>
             <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
               Where We're{" "}
@@ -866,7 +888,7 @@ export default function Home() {
       {/* ── Tokenomics ── */}
       <section id="tokenomics" className="py-24" style={{ background: "#020b18" }}>
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 reveal">
             <Badge className="mb-4" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)" }}>Tokenomics</Badge>
             <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
               GWC Token{" "}
@@ -939,7 +961,7 @@ export default function Home() {
       {/* ── FAQ ── */}
       <section id="faq" className="py-24" style={{ background: "linear-gradient(to bottom, #020b18, #071428)" }}>
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 reveal">
             <Badge className="mb-4" style={{ background: "rgba(6, 182, 212, 0.1)", color: "#06b6d4", border: "1px solid rgba(6, 182, 212, 0.3)" }}>FAQ</Badge>
             <h2 className="font-display font-bold text-4xl md:text-5xl mb-4" style={{ fontFamily: "Syne, sans-serif" }}>
               Common{" "}
