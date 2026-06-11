@@ -232,7 +232,7 @@ function GWCPriceTicker() {
         >
           <span className="text-xs" style={{ color: "#64748b" }}>FDV</span>
           <span className="font-mono text-xs font-semibold" style={{ color: "#10b981", fontFamily: "JetBrains Mono, monospace" }}>
-            {fdv >= 1_000_000 ? `$${(fdv / 1_000_000).toFixed(2)}M` : fdv >= 1_000 ? `$${(fdv / 1_000).toFixed(1)}K` : `$${fdv.toFixed(0)}`}
+            {fdv >= 1e6 ? `$${(fdv / 1e6).toFixed(2)}M` : fdv >= 1e3 ? `$${(fdv / 1e3).toFixed(1)}K` : `$${fdv.toFixed(0)}`}
           </span>
         </div>
       )}
@@ -934,7 +934,7 @@ export default function Home() {
             {[
               { status: "done", label: "Completed", title: "Testnet Launch", desc: "Worker client deployed, coordinator live, first epoch rewards distributed on Polygon Amoy Testnet.", date: "Q1 2025" },
               { status: "done", label: "Completed", title: "Mainnet Launch", desc: "GWC token and reward contracts deployed to Polygon Mainnet. Verified on Polygonscan.", date: "Q2 2026" },
-              { status: "done", label: "Completed", title: "Open Source Release", desc: "Full source code published on GitHub. Smart contracts verified on Polygonscan.", date: "Q2 2025" },
+              { status: "done", label: "Completed", title: "Open Source Release", desc: "Full source code published on GitHub. Smart contracts verified on Polygonscan.", date: "Q2 2026" },
               { status: "active", label: "In Progress", title: "Community Growth", desc: "Expanding the worker network, applying for ecosystem grants, building the leaderboard and dashboard.", date: "Q3 2026" },
               
               { status: "upcoming", label: "Upcoming", title: "Governance Module", desc: "GWC holders vote on network parameters: reward weights, epoch length, research directions.", date: "Q2 2027" },
