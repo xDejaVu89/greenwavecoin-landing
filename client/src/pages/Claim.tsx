@@ -14,8 +14,8 @@ import {
   ExternalLink, ArrowRight, Zap, RefreshCw, ShieldCheck
 } from "lucide-react";
 
-const REWARD_POOL_ADDRESS = "0x41Db62B904301DAf40389dbE1487BA5Bfe4d06D9" as const;
-const GWC_TOKEN_ADDRESS = "0x74e4F6597095d0807b77D7080E93B77331513585" as const;
+const REWARD_POOL_ADDRESS = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86" as const;
+const GWC_TOKEN_ADDRESS = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9" as const;
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
 
 const REWARD_POOL_ABI = parseAbi([

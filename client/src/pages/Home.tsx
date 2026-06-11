@@ -19,8 +19,8 @@ import {
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
 const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.0/GreenWaveCoin-Worker.exe";
 const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
-const GWC_TOKEN = "0x74e4F6597095d0807b77D7080E93B77331513585";
-const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
+const GWC_TOKEN = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9";
+const ESCROW_ADDR = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86";
 const CHAIN_NAME = "Polygon Mainnet";
 const POLYGONSCAN_URL = `https://polygonscan.com/address/${GWC_TOKEN}`;
 

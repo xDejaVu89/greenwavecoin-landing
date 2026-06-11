@@ -144,7 +144,7 @@ export default function Grants() {
                   { label: "Project Name", value: "GreenWaveCoin (GWC)" },
                   { label: "Category", value: "DeFi Infrastructure / Decentralised Compute" },
                   { label: "Network", value: "Polygon Mainnet" },
-                  { label: "Token Contract", value: "0x74e4F6597095d0807b77D7080E93B77331513585" },
+                  { label: "Token Contract", value: "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9" },
                   { label: "GitHub", value: "https://github.com/xDejaVu89/greenwavecoin" },
                   { label: "Requested Amount", value: "$10,000 – $25,000 USD equivalent in MATIC/POL" },
                 ].map(row => (
