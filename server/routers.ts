@@ -138,6 +138,45 @@ export const appRouter = router({
 
   // ── Network Proxy ─────────────────────────────────────────────────────────
   network: router({
+    getPrice: publicProcedure.query(async () => {
+      // GeckoTerminal API — free, no key required
+      // Once a QuickSwap pool exists for GWC, replace PAIR_ADDRESS with the actual pair address
+      const GWC_CONTRACT = "0x74e4F6597095d0807b77D7080E93B77331513585";
+      const GECKO_URL = `https://api.geckoterminal.com/api/v2/networks/polygon_pos/tokens/${GWC_CONTRACT}`;
+
+      const result = await fetchWithCache<{
+        price_usd: string | null;
+        fdv_usd: string | null;
+        volume_usd_24h: string | null;
+        price_change_24h: number | null;
+      }>(
+        "gwc:price",
+        GECKO_URL,
+        { price_usd: null, fdv_usd: null, volume_usd_24h: null, price_change_24h: null }
+      );
+
+      // GeckoTerminal wraps the data in data.attributes
+      const raw = result.data as unknown as {
+        data?: { attributes?: {
+          price_usd?: string | null;
+          fdv_usd?: string | null;
+          volume_usd?: { h24?: string } | null;
+          price_change_percentage?: { h24?: number } | null;
+        } }
+      };
+      const attrs = raw?.data?.attributes;
+
+      return {
+        price_usd: attrs?.price_usd ?? null,
+        fdv_usd: attrs?.fdv_usd ?? null,
+        volume_usd_24h: attrs?.volume_usd?.h24 ?? null,
+        price_change_24h: attrs?.price_change_percentage?.h24 ?? null,
+        fromCache: result.fromCache,
+        updatedAt: result.updatedAt,
+      };
+    }),
+
+
     getStats: publicProcedure.query(async () => {
       return fetchWithCache(
         "coordinator:status",

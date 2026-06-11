@@ -100,3 +100,13 @@
 - [x] Post list with edit/delete/publish/draft toggle
 - [x] Rich post editor with markdown preview
 - [x] Link from dashboard for admin users
+
+## Phase 15 — Post-Deployment Tasks
+
+- [x] Build epoch reward Merkle tree script (reads coordinator data, generates proof, calls postEpochRoot)
+- [x] Write coordinator configuration guide with mainnet contract addresses
+- [x] Write QuickSwap liquidity addition guide with step-by-step instructions
+- [x] Prepare CoinGecko listing application (info.json + required assets)
+- [x] Prepare CoinMarketCap listing application
+- [x] Add live GWC price ticker to landing site homepage (QuickSwap subgraph / GeckoTerminal API)
+- [x] Build on-chain worker claim portal page (connect wallet, show claimable GWC, submit Merkle proof)

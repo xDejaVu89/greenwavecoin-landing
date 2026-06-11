@@ -191,6 +191,65 @@ function useLeaderboard() {
 }
 
 // ─── Waitlist Section ─────────────────────────────────────────────────────────
+// ─── GWC Price Ticker ─────────────────────────────────────────────────
+function GWCPriceTicker() {
+  const { data, isLoading } = trpc.network.getPrice.useQuery(undefined, {
+    refetchInterval: 60_000,
+    retry: 1,
+  });
+
+  const price = data?.price_usd ? parseFloat(data.price_usd) : null;
+  const change24h = data?.price_change_24h ?? null;
+  const fdv = data?.fdv_usd ? parseFloat(data.fdv_usd) : null;
+  const isPositive = change24h !== null && change24h >= 0;
+
+  if (isLoading) return null;
+
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div
+        className="flex items-center gap-2 px-4 py-2 rounded-xl"
+        style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.2)" }}
+      >
+        <Coins size={14} style={{ color: "#06b6d4" }} />
+        <span className="text-xs" style={{ color: "#64748b" }}>GWC</span>
+        <span className="font-mono font-bold text-sm" style={{ color: "#f0f9ff", fontFamily: "JetBrains Mono, monospace" }}>
+          {price !== null ? `$${price < 0.01 ? price.toFixed(6) : price.toFixed(4)}` : "Price TBD"}
+        </span>
+        {change24h !== null && (
+          <span
+            className="text-xs font-mono font-semibold"
+            style={{ color: isPositive ? "#10b981" : "#ef4444", fontFamily: "JetBrains Mono, monospace" }}
+          >
+            {isPositive ? "+" : ""}{change24h.toFixed(2)}%
+          </span>
+        )}
+      </div>
+      {fdv !== null && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-xl"
+          style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.2)" }}
+        >
+          <span className="text-xs" style={{ color: "#64748b" }}>FDV</span>
+          <span className="font-mono text-xs font-semibold" style={{ color: "#10b981", fontFamily: "JetBrains Mono, monospace" }}>
+            {fdv >= 1_000_000 ? `$${(fdv / 1_000_000).toFixed(2)}M` : fdv >= 1_000 ? `$${(fdv / 1_000).toFixed(1)}K` : `$${fdv.toFixed(0)}`}
+          </span>
+        </div>
+      )}
+      <a
+        href={POLYGONSCAN_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs transition-colors"
+        style={{ background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.15)", color: "#64748b" }}
+      >
+        <ExternalLink size={11} />
+        Polygonscan
+      </a>
+    </div>
+  );
+}
+
 function WaitlistSection() {
   const [wallet, setWallet] = useState("");
   const [email, setEmail] = useState("");
@@ -433,6 +492,11 @@ export default function Home() {
             ))}
           </div>
           <div className="flex items-center gap-3">
+            <a href="/claim" className="hidden md:block">
+              <Button size="sm" className="gap-2 font-semibold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}>
+                <Coins size={14} /> Claim GWC
+              </Button>
+            </a>
             <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="hidden md:block">
               <Button variant="outline" size="sm" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "transparent" }}>
                 <Github size={15} /> GitHub
@@ -548,6 +612,9 @@ export default function Home() {
 
             {/* Live tasks running ticker */}
             <LiveTasksTicker />
+
+            {/* GWC live price ticker */}
+            <GWCPriceTicker />
           </div>
         </div>
       </section>
@@ -1199,6 +1266,7 @@ export default function Home() {
               <div className="space-y-2">
                 <a href="/network" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Network Explorer</a>
                 <a href="/dashboard" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Worker Dashboard</a>
+                <a href="/claim" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Claim Rewards</a>
                 <a href="/blog" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Blog & Updates</a>
                 <a href="/benchmark" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Earnings Calculator</a>
                 <a href="/grants" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Grants & Funding</a>
