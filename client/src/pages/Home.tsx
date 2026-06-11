@@ -4,7 +4,7 @@
  * Sections: Nav, Hero (particle network), Stats, How It Works, Leaderboard, Worker Setup, Footer
  */
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -158,41 +158,36 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
 
 // ─── Network Stats Hook ──────────────────────────────────────────────────────
 function useNetworkStats() {
-  const [stats, setStats] = useState({ queueLength: 0, totalResults: 0, uniqueWorkers: 0, status: "loading" });
+  const { data, isError } = trpc.network.getStats.useQuery(undefined, {
+    refetchInterval: 30_000,
+    retry: 1,
+  });
 
-  const fetchStats = useCallback(async () => {
-    try {
-      const r = await fetch(`${COORDINATOR_URL}/health`);
-      if (r.ok) {
-        const d = await r.json();
-        setStats({ queueLength: d.queueLength ?? 0, totalResults: d.totalResults ?? 0, uniqueWorkers: d.uniqueWorkers ?? 0, status: "ok" });
-      }
-    } catch {
-      setStats(s => ({ ...s, status: "offline" }));
-    }
-  }, []);
+  const d = data?.data;
+  const status = isError ? "offline" : data ? "ok" : "loading";
 
-  useEffect(() => {
-    fetchStats();
-    const interval = setInterval(fetchStats, 15000);
-    return () => clearInterval(interval);
-  }, [fetchStats]);
-
-  return stats;
+  return {
+    queueLength: 0,
+    totalResults: d?.total_tasks ?? 0,
+    uniqueWorkers: d?.active_workers ?? 0,
+    status,
+  };
 }
 
 // ─── Leaderboard Hook ────────────────────────────────────────────────────────
 function useLeaderboard() {
-  const [leaders, setLeaders] = useState<{ wallet: string; tasks: number; avgAccuracy: number }[]>([]);
+  const { data } = trpc.network.getLeaderboard.useQuery(undefined, {
+    refetchInterval: 60_000,
+    retry: 1,
+  });
 
-  useEffect(() => {
-    fetch(`${COORDINATOR_URL}/api/ai/leaderboard`)
-      .then(r => r.json())
-      .then(d => setLeaders(d.leaderboard ?? []))
-      .catch(() => {});
-  }, []);
-
-  return leaders;
+  const raw = data?.data ?? [];
+  const arr = Array.isArray(raw) ? raw : [];
+  return arr.map((e: { wallet: string; tasks: number; avgAccuracy?: number }) => ({
+    wallet: e.wallet,
+    tasks: e.tasks,
+    avgAccuracy: e.avgAccuracy ?? 0,
+  }));
 }
 
 // ─── Waitlist Section ─────────────────────────────────────────────────────────
@@ -1204,6 +1199,7 @@ export default function Home() {
                 <a href="/network" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Network Explorer</a>
                 <a href="/dashboard" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Worker Dashboard</a>
                 <a href="/blog" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Blog & Updates</a>
+                <a href="/grants" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Grants & Funding</a>
                 <a href="#run-worker" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Download Worker</a>
               </div>
             </div>

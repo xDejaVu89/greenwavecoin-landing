@@ -1,6 +1,6 @@
 import { count, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, InsertWaitlist, InsertWorkerProfile, users, waitlist, workerProfiles } from "../drizzle/schema";
+import { InsertUser, InsertWaitlist, InsertWorkerProfile, networkCache, users, waitlist, workerProfiles } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -150,4 +150,21 @@ export async function createPost(data: import("../drizzle/schema").InsertPost) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.insert(posts).values(data);
+}
+
+// ── Network Cache ───────────────────────────────────────────────────────────────────
+
+export async function getCacheEntry(key: string): Promise<{ value: string; updatedAt: Date } | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(networkCache).where(eq(networkCache.key, key)).limit(1);
+  return result[0] ?? undefined;
+}
+
+export async function setCacheEntry(key: string, value: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(networkCache)
+    .values({ key, value })
+    .onDuplicateKeyUpdate({ set: { value } });
 }

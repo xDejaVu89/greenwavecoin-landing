@@ -8,6 +8,36 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { setCacheEntry } from "../db";
+
+const COORDINATOR_URL = "https://206.81.5.13.nip.io";
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+
+async function refreshCoordinatorCache() {
+  const endpoints = [
+    { key: "coordinator:status", path: "/api/ai/status" },
+    { key: "coordinator:leaderboard", path: "/api/ai/leaderboard" },
+  ];
+  for (const { key, path } of endpoints) {
+    try {
+      const res = await fetch(`${COORDINATOR_URL}${path}`, { signal: AbortSignal.timeout(10_000) });
+      if (res.ok) {
+        const data = await res.json();
+        await setCacheEntry(key, JSON.stringify(data));
+        console.log(`[Cache] Refreshed ${key}`);
+      }
+    } catch (err) {
+      console.warn(`[Cache] Failed to refresh ${key}:`, (err as Error).message);
+    }
+  }
+}
+
+function startCoordinatorRefreshJob() {
+  // Run immediately on startup, then every 5 minutes
+  refreshCoordinatorCache().catch(() => {});
+  setInterval(() => refreshCoordinatorCache().catch(() => {}), REFRESH_INTERVAL_MS);
+  console.log("[Cache] Coordinator refresh job started (every 5 minutes)");
+}
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -61,6 +91,9 @@ async function startServer() {
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
   });
+
+  // Start background coordinator cache refresh
+  startCoordinatorRefreshJob();
 }
 
 startServer().catch(console.error);

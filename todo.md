@@ -59,8 +59,20 @@
 
 ## Remaining / Future
 - [x] Section entrance animations (IntersectionObserver, fade-up on scroll)
-- [ ] Server-side coordinator proxy (cache leaderboard in DB for resilience)
+- [x] Server-side coordinator proxy (cache leaderboard in DB for resilience)
 - [x] "Share your rank" tweet button on dashboard
 - [x] CONTRIBUTING.md for open source contributors
-- [ ] Polygon Foundation grant application page
+- [x] Polygon Foundation grant application page
 - [x] Live tasks running ticker in hero
+
+## Phase 10 — Server-side Coordinator Proxy
+- [x] DB table: networkCache (key, value JSON, updatedAt)
+- [x] Server cron: fetch coordinator every 5 min, store in DB
+- [x] tRPC procedures: network.getStats, network.getLeaderboard (serve from cache)
+- [x] Update Home.tsx, Network.tsx, Dashboard.tsx to use tRPC instead of direct fetch
+
+## Phase 11 — Grant Application Page
+- [x] /grants route
+- [x] Polygon Foundation grant application form (pre-filled, printable)
+- [x] Links to Gitcoin Grants and other funding sources
+- [x] "Support the Project" section with donation/grant info

@@ -70,3 +70,15 @@ export const posts = mysqlTable("posts", {
 
 export type Post = typeof posts.$inferSelect;
 export type InsertPost = typeof posts.$inferInsert;
+
+/**
+ * Network cache — server-side cache of coordinator API responses.
+ * Refreshed every 5 minutes by a background job.
+ */
+export const networkCache = mysqlTable("networkCache", {
+  key: varchar("key", { length: 64 }).primaryKey(),
+  value: text("value").notNull(), // JSON string
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NetworkCache = typeof networkCache.$inferSelect;

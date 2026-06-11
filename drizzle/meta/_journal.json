@@ -15,6 +15,13 @@
       "when": 1781179378156,
       "tag": "0001_adorable_ezekiel_stane",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1781180808311,
+      "tag": "0002_wakeful_goliath",
+      "breakpoints": true
     }
   ]
 }

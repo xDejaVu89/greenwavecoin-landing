@@ -7,14 +7,49 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
   createPost,
+  getCacheEntry,
   getPostBySlug,
   getPublishedPosts,
   getWaitlistCount,
   getWorkerProfile,
   joinWaitlist,
+  setCacheEntry,
   upsertWorkerProfile,
   walletAlreadyOnWaitlist,
 } from "./db";
+
+const COORDINATOR_URL = "https://206.81.5.13.nip.io";
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+async function fetchWithCache<T>(
+  key: string,
+  url: string,
+  fallback: T
+): Promise<{ data: T; fromCache: boolean; updatedAt: Date | null }> {
+  const cached = await getCacheEntry(key).catch(() => undefined);
+  const now = Date.now();
+
+  if (cached && now - cached.updatedAt.getTime() < CACHE_TTL_MS) {
+    try {
+      return { data: JSON.parse(cached.value) as T, fromCache: true, updatedAt: cached.updatedAt };
+    } catch { /* fall through */ }
+  }
+
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json() as T;
+    await setCacheEntry(key, JSON.stringify(data)).catch(() => {});
+    return { data, fromCache: false, updatedAt: new Date() };
+  } catch {
+    if (cached) {
+      try {
+        return { data: JSON.parse(cached.value) as T, fromCache: true, updatedAt: cached.updatedAt };
+      } catch { /* fall through */ }
+    }
+    return { data: fallback, fromCache: false, updatedAt: null };
+  }
+}
 
 export const appRouter = router({
   system: systemRouter,
@@ -93,6 +128,26 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+  }),
+
+
+  // ── Network Proxy ─────────────────────────────────────────────────────────
+  network: router({
+    getStats: publicProcedure.query(async () => {
+      return fetchWithCache(
+        "coordinator:status",
+        `${COORDINATOR_URL}/api/ai/status`,
+        { total_tasks: 0, active_workers: 0, total_workers: 0, current_epoch: 0, best_accuracy: 0 }
+      );
+    }),
+
+    getLeaderboard: publicProcedure.query(async () => {
+      return fetchWithCache(
+        "coordinator:leaderboard",
+        `${COORDINATOR_URL}/api/ai/leaderboard`,
+        [] as { wallet: string; tasks: number }[]
+      );
+    }),
   }),
 
   // ── Blog ────────────────────────────────────────────────────────────────────

@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Network from "./pages/Network";
+import Grants from "./pages/Grants";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +20,7 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/network"} component={Network} />
+      <Route path={"/grants"} component={Grants} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
