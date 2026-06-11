@@ -60,7 +60,7 @@
 ## Remaining / Future
 - [x] Section entrance animations (IntersectionObserver, fade-up on scroll)
 - [ ] Server-side coordinator proxy (cache leaderboard in DB for resilience)
-- [ ] "Share your rank" tweet button on dashboard
-- [ ] CONTRIBUTING.md for open source contributors
+- [x] "Share your rank" tweet button on dashboard
+- [x] CONTRIBUTING.md for open source contributors
 - [ ] Polygon Foundation grant application page
-- [ ] Live tasks running ticker in hero
+- [x] Live tasks running ticker in hero

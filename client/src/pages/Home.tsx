@@ -326,6 +326,42 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+// ─── Live Tasks Ticker ─────────────────────────────────────────────────────
+function LiveTasksTicker() {
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Poll the coordinator every 30 seconds for real task count
+    const poll = () => {
+      fetch("https://206.81.5.13.nip.io/api/ai/status")
+        .then(r => r.json())
+        .then((d: { total_tasks?: number }) => {
+          if (typeof d.total_tasks === "number") setCount(d.total_tasks);
+        })
+        .catch(() => {});
+    };
+    poll();
+    const interval = setInterval(poll, 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (count === null) return null;
+
+  return (
+    <div className="mt-6 flex items-center gap-3 px-4 py-2.5 rounded-xl w-fit"
+      style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.2)" }}>
+      <span className="relative flex h-2 w-2">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: "#10b981" }} />
+        <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: "#10b981" }} />
+      </span>
+      <span className="text-xs" style={{ color: "#64748b" }}>Tasks completed network-wide:</span>
+      <span className="font-mono font-bold text-sm" style={{ color: "#06b6d4", fontFamily: "JetBrains Mono, monospace" }}>
+        {count.toLocaleString()}
+      </span>
+    </div>
+  );
+}
+
 // ─── Scroll Reveal Hook ─────────────────────────────────────────────────────
 function useScrollReveal() {
   useEffect(() => {
@@ -514,6 +550,9 @@ export default function Home() {
                 ))}
               </div>
             )}
+
+            {/* Live tasks running ticker */}
+            <LiveTasksTicker />
           </div>
         </div>
       </section>
