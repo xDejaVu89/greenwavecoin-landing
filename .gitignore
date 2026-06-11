@@ -118,5 +118,5 @@ references/
 ideas.md
 
 # Stale root src/ directory (legacy static template remnant - real source is in client/src/)
-src/
+/src/
 .manus-logs/

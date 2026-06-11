@@ -21,7 +21,7 @@
 ## Phase 4 — UX Improvements
 - [x] Mobile navigation drawer (hamburger menu, all nav links)
 - [x] Scroll progress bar (thin cyan line at top of page)
-- [ ] Section entrance animations (IntersectionObserver, fade-up on scroll)
+- [x] Section entrance animations (IntersectionObserver, fade-up on scroll)
 
 ## Phase 5 — Worker Dashboard
 - [x] DB table: workerProfiles (userId, walletAddress)
