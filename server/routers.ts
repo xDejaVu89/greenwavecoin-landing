@@ -6,14 +6,19 @@ import { notifyOwner } from "./_core/notification";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
+  claimBadge,
   createPost,
+  deletePost,
+  getAllPosts,
   getCacheEntry,
   getPostBySlug,
   getPublishedPosts,
+  getUserBadges,
   getWaitlistCount,
   getWorkerProfile,
   joinWaitlist,
   setCacheEntry,
+  updatePost,
   upsertWorkerProfile,
   walletAlreadyOnWaitlist,
 } from "./db";
@@ -150,6 +155,39 @@ export const appRouter = router({
     }),
   }),
 
+  // ── Badges ──────────────────────────────────────────────────────────────────
+  badges: router({
+    getMy: protectedProcedure.query(async ({ ctx }) => {
+      return getUserBadges(ctx.user.id);
+    }),
+
+    claim: protectedProcedure
+      .input(z.object({
+        milestone: z.enum(["tasks_100", "tasks_1000", "tasks_10000", "top_10"]),
+        taskCount: z.number().int().min(0),
+        isTop10: z.boolean().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const eligible =
+          (input.milestone === "tasks_100" && input.taskCount >= 100) ||
+          (input.milestone === "tasks_1000" && input.taskCount >= 1000) ||
+          (input.milestone === "tasks_10000" && input.taskCount >= 10000) ||
+          (input.milestone === "top_10" && input.isTop10 === true);
+
+        if (!eligible) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "You have not reached this milestone yet." });
+        }
+
+        const existing = await getUserBadges(ctx.user.id);
+        if (existing.some(b => b.milestone === input.milestone)) {
+          throw new TRPCError({ code: "CONFLICT", message: "Badge already claimed." });
+        }
+
+        await claimBadge({ userId: ctx.user.id, milestone: input.milestone });
+        return { success: true };
+      }),
+  }),
+
   // ── Blog ────────────────────────────────────────────────────────────────────
   blog: router({
     list: publicProcedure.query(async () => {
@@ -184,6 +222,41 @@ export const appRouter = router({
           authorId: ctx.user.id,
           publishedAt: input.published ? new Date() : null,
         });
+        return { success: true };
+      }),
+  }),
+
+  // ── Admin ───────────────────────────────────────────────────────────────────
+  admin: router({
+    listPosts: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getAllPosts();
+    }),
+
+    updatePost: protectedProcedure
+      .input(z.object({
+        id: z.number().int(),
+        title: z.string().min(1).max(255).optional(),
+        content: z.string().min(1).optional(),
+        excerpt: z.string().max(500).optional(),
+        published: z.boolean().optional(),
+        slug: z.string().min(1).max(255).regex(/^[a-z0-9-]+$/).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        const { id, ...data } = input;
+        const updateData: Record<string, unknown> = { ...data };
+        if (data.published === true) updateData.publishedAt = new Date();
+        if (data.published === false) updateData.publishedAt = null;
+        await updatePost(id, updateData as Parameters<typeof updatePost>[1]);
+        return { success: true };
+      }),
+
+    deletePost: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        await deletePost(input.id);
         return { success: true };
       }),
   }),

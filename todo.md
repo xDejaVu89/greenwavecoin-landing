@@ -76,3 +76,27 @@
 - [x] Polygon Foundation grant application form (pre-filled, printable)
 - [x] Links to Gitcoin Grants and other funding sources
 - [x] "Support the Project" section with donation/grant info
+
+## Phase 11 — Content & Accuracy Fixes
+- [x] Fix roadmap dates (Governance Q1 2026 → Q2 2027, DEX Listing Q2 2026 → Q3 2027)
+- [x] Update GitHub placeholder URL in nav and footer to real repo URL (already correct: xDejaVu89/greenwavecoin)
+- [x] Update coordinator URL placeholder if a proper domain is available (using nip.io domain, no change needed)
+
+## Phase 12 — Worker Benchmarking Tool
+- [ ] /benchmark page with CPU spec input form
+- [ ] Estimated tasks/day and GWC earnings calculator
+- [ ] Shareable results card
+- [ ] Link from nav and footer
+
+## Phase 13 — NFT Milestone Badges
+- [ ] DB table: badges (userId, milestone, txHash, mintedAt)
+- [ ] tRPC procedures: badges.getMy, badges.claim
+- [ ] Milestone logic: 100 tasks, 1000 tasks, top-10 leaderboard
+- [ ] Badge display on dashboard
+- [ ] Share badge on X button
+
+## Phase 14 — Admin Blog Dashboard
+- [ ] /admin route (admin-only protected)
+- [ ] Post list with edit/delete/publish/draft toggle
+- [ ] Rich post editor with markdown preview
+- [ ] Link from dashboard for admin users

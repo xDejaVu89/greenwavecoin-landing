@@ -10,6 +10,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Network from "./pages/Network";
 import Grants from "./pages/Grants";
+import Benchmark from "./pages/Benchmark";
+import Admin from "./pages/Admin";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -21,6 +23,8 @@ function Router() {
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/network"} component={Network} />
       <Route path={"/grants"} component={Grants} />
+      <Route path={"/benchmark"} component={Benchmark} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

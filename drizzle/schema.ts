@@ -82,3 +82,17 @@ export const networkCache = mysqlTable("networkCache", {
 });
 
 export type NetworkCache = typeof networkCache.$inferSelect;
+
+/**
+ * NFT milestone badges — earned by workers hitting contribution milestones.
+ */
+export const badges = mysqlTable("badges", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  milestone: mysqlEnum("milestone", ["tasks_100", "tasks_1000", "tasks_10000", "top_10"]).notNull(),
+  txHash: varchar("txHash", { length: 128 }), // on-chain tx hash once minted
+  claimedAt: timestamp("claimedAt").defaultNow().notNull(),
+});
+
+export type Badge = typeof badges.$inferSelect;
+export type InsertBadge = typeof badges.$inferInsert;

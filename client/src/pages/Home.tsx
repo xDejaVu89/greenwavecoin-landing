@@ -867,11 +867,11 @@ export default function Home() {
             {[
               { status: "done", label: "Completed", title: "Testnet Launch", desc: "Worker client deployed, coordinator live, first epoch rewards distributed on Polygon Amoy Testnet.", date: "Q1 2025" },
               { status: "done", label: "Completed", title: "Open Source Release", desc: "Full source code published on GitHub. Smart contracts verified on Polygonscan.", date: "Q2 2025" },
-              { status: "active", label: "In Progress", title: "Community Growth", desc: "Expanding the worker network, applying for ecosystem grants, building the leaderboard and dashboard.", date: "Q3 2025" },
+              { status: "active", label: "In Progress", title: "Community Growth", desc: "Expanding the worker network, applying for ecosystem grants, building the leaderboard and dashboard.", date: "Q3 2026" },
               { status: "upcoming", label: "Upcoming", title: "Mainnet Launch", desc: "Migration from Amoy Testnet to Polygon Mainnet. Real token value, real rewards.", date: "Q4 2026" },
-              { status: "upcoming", label: "Upcoming", title: "Governance Module", desc: "GWC holders vote on network parameters: reward weights, epoch length, research directions.", date: "Q1 2026" },
-              { status: "upcoming", label: "Upcoming", title: "CEX / DEX Listing", desc: "List GWC on decentralised exchanges (Uniswap, QuickSwap) and pursue centralised exchange listings.", date: "Q2 2026" },
-              { status: "upcoming", label: "Upcoming", title: "Mobile Worker App", desc: "Lightweight Android/iOS app that contributes idle compute to the network while your phone charges.", date: "2026" },
+              { status: "upcoming", label: "Upcoming", title: "Governance Module", desc: "GWC holders vote on network parameters: reward weights, epoch length, research directions.", date: "Q2 2027" },
+              { status: "upcoming", label: "Upcoming", title: "CEX / DEX Listing", desc: "List GWC on decentralised exchanges (Uniswap, QuickSwap) and pursue centralised exchange listings.", date: "Q3 2027" },
+              { status: "upcoming", label: "Upcoming", title: "Mobile Worker App", desc: "Lightweight Android/iOS app that contributes idle compute to the network while your phone charges.", date: "2027" },
             ].map((item, i) => (
               <div key={i} className={`relative flex gap-6 md:gap-0 mb-12 ${
                 i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
@@ -1199,6 +1199,7 @@ export default function Home() {
                 <a href="/network" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Network Explorer</a>
                 <a href="/dashboard" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Worker Dashboard</a>
                 <a href="/blog" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Blog & Updates</a>
+                <a href="/benchmark" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Earnings Calculator</a>
                 <a href="/grants" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Grants & Funding</a>
                 <a href="#run-worker" className="block text-sm hover:text-[#06b6d4] transition-colors" style={{ color: "#64748b" }}>Download Worker</a>
               </div>
@@ -1220,7 +1221,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(51,65,85,0.3)" }}>
-            <p className="text-xs" style={{ color: "#334155" }}>© 2025 GreenWaveCoin. Open source under MIT License.</p>
+            <p className="text-xs" style={{ color: "#334155" }}>© 2026 GreenWaveCoin. Open source under MIT License.</p>
             <p className="text-xs" style={{ color: "#334155" }}>Polygon Amoy Testnet — Mainnet coming soon</p>
           </div>
         </div>

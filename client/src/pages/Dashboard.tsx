@@ -12,7 +12,7 @@ import { getLoginUrl } from "@/const";
 import {
   Zap, Trophy, Cpu, Wallet, Github, ExternalLink,
   LogOut, ArrowLeft, CheckCircle2, AlertCircle, Loader2,
-  Activity, Users, BarChart3, Share2
+  Activity, Users, BarChart3, Share2, ShieldCheck, Settings
 } from "lucide-react";
 
 const POLYGONSCAN_URL = "https://amoy.polygonscan.com/address/";
@@ -34,6 +34,14 @@ export default function Dashboard() {
   const [walletInput, setWalletInput] = useState("");
   const [walletSaved, setWalletSaved] = useState(false);
   const [walletError, setWalletError] = useState("");
+
+  const { data: myBadges } = trpc.badges.getMy.useQuery(undefined, { enabled: !!user });
+
+  const claimBadge = trpc.badges.claim.useMutation({
+    onSuccess: () => utils.badges.getMy.invalidate(),
+  });
+
+  const utils = trpc.useUtils();
 
   const { data: profile, refetch: refetchProfile } = trpc.dashboard.getProfile.useQuery(
     undefined,
@@ -107,6 +115,13 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {user?.role === "admin" && (
+              <a href="/admin">
+                <Button variant="outline" size="sm" className="gap-2" style={{ borderColor: "rgba(139,92,246,0.4)", color: "#a78bfa", background: "rgba(139,92,246,0.05)" }}>
+                  <Settings size={14} /> Admin
+                </Button>
+              </a>
+            )}
             <span className="text-sm hidden sm:block" style={{ color: "#64748b" }}>{user?.name || user?.email || "Worker"}</span>
             <Button variant="outline" size="sm" className="gap-2" onClick={() => logout()} style={{ borderColor: "rgba(51,65,85,0.5)", color: "#64748b", background: "transparent" }}>
               <LogOut size={14} /> Sign out
@@ -241,6 +256,52 @@ export default function Dashboard() {
                 })}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* ── Milestone Badges ── */}
+        <div className="mt-8 rounded-2xl p-6" style={{ background: "rgba(7,20,40,0.8)", border: "1px solid rgba(51,65,85,0.4)" }}>
+          <div className="flex items-center gap-2 mb-5">
+            <ShieldCheck size={18} style={{ color: "#06b6d4" }} />
+            <h2 className="text-base font-bold" style={{ fontFamily: "Syne, sans-serif" }}>Milestone Badges</h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {([
+              { milestone: "tasks_100" as const, label: "100 Tasks", emoji: "🌱", desc: "Complete 100 tasks", threshold: 100 },
+              { milestone: "tasks_1000" as const, label: "1,000 Tasks", emoji: "⚡", desc: "Complete 1,000 tasks", threshold: 1000 },
+              { milestone: "tasks_10000" as const, label: "10,000 Tasks", emoji: "🔥", desc: "Complete 10,000 tasks", threshold: 10000 },
+              { milestone: "top_10" as const, label: "Top 10", emoji: "🏆", desc: "Reach top 10 on leaderboard", threshold: 0 },
+            ]).map(b => {
+              const earned = myBadges?.some(mb => mb.milestone === b.milestone);
+              const myTasks = myRank?.tasks ?? 0;
+              const isTop10 = myRank ? myRank.rank <= 10 : false;
+              const eligible = b.milestone === "top_10" ? isTop10 : myTasks >= b.threshold;
+              return (
+                <div key={b.milestone} className="rounded-xl p-4 text-center transition-all" style={{
+                  background: earned ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.3)",
+                  border: earned ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(51,65,85,0.3)",
+                  opacity: !earned && !eligible ? 0.5 : 1,
+                }}>
+                  <div className="text-3xl mb-2" style={{ filter: earned ? "none" : "grayscale(1)" }}>{b.emoji}</div>
+                  <div className="text-xs font-bold mb-1" style={{ color: earned ? "#10b981" : "#f0f9ff" }}>{b.label}</div>
+                  <div className="text-xs mb-3" style={{ color: "#475569" }}>{b.desc}</div>
+                  {earned ? (
+                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}>Earned ✓</span>
+                  ) : eligible ? (
+                    <button
+                      onClick={() => claimBadge.mutate({ milestone: b.milestone, taskCount: myTasks, isTop10 })}
+                      disabled={claimBadge.isPending}
+                      className="text-xs px-3 py-1 rounded-full font-semibold transition-all"
+                      style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18" }}
+                    >
+                      Claim
+                    </button>
+                  ) : (
+                    <span className="text-xs" style={{ color: "#334155" }}>Locked</span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 

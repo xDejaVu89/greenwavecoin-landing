@@ -1,6 +1,6 @@
-import { count, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, InsertWaitlist, InsertWorkerProfile, networkCache, users, waitlist, workerProfiles } from "../drizzle/schema";
+import { badges, InsertBadge, InsertUser, InsertWaitlist, InsertWorkerProfile, networkCache, posts, users, waitlist, workerProfiles } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -167,4 +167,50 @@ export async function setCacheEntry(key: string, value: string): Promise<void> {
   await db.insert(networkCache)
     .values({ key, value })
     .onDuplicateKeyUpdate({ set: { value } });
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────────────────
+
+export async function getUserBadges(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(badges).where(eq(badges.userId, userId));
+}
+
+export async function hasBadge(userId: number, milestone: InsertBadge["milestone"]): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const result = await db.select({ id: badges.id }).from(badges)
+    .where(eq(badges.userId, userId))
+    .limit(1);
+  return result.some(b => {
+    const row = b as { id: number };
+    return row.id > 0;
+  });
+}
+
+export async function claimBadge(data: InsertBadge) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(badges).values(data);
+}
+
+// ── Admin Blog ──────────────────────────────────────────────────────────────────────────
+
+export async function getAllPosts() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(posts).orderBy(desc(posts.createdAt));
+}
+
+export async function updatePost(id: number, data: Partial<import("../drizzle/schema").InsertPost>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(posts).set({ ...data, updatedAt: new Date() }).where(eq(posts.id, id));
+}
+
+export async function deletePost(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(posts).where(eq(posts.id, id));
 }
