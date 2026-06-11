@@ -19,10 +19,10 @@ import {
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
 const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.0/GreenWaveCoin-Worker.exe";
 const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
-const GWC_TOKEN = "0x6D938b4C48300A29905FBa272cCdC1207538865f";
+const GWC_TOKEN = "0x74e4F6597095d0807b77D7080E93B77331513585";
 const ESCROW_ADDR = "0x2F3F050Ba9701c18E852011258fe6FF858BC0ED0";
-const CHAIN_NAME = "Polygon Amoy Testnet";
-const POLYGONSCAN_URL = `https://amoy.polygonscan.com/address/${GWC_TOKEN}`;
+const CHAIN_NAME = "Polygon Mainnet";
+const POLYGONSCAN_URL = `https://polygonscan.com/address/${GWC_TOKEN}`;
 
 // ─── Particle Network Canvas ───────────────────────────────────────────────
 function ParticleCanvas() {
@@ -866,9 +866,10 @@ export default function Home() {
 
             {[
               { status: "done", label: "Completed", title: "Testnet Launch", desc: "Worker client deployed, coordinator live, first epoch rewards distributed on Polygon Amoy Testnet.", date: "Q1 2025" },
+              { status: "done", label: "Completed", title: "Mainnet Launch", desc: "GWC token and reward contracts deployed to Polygon Mainnet. Verified on Polygonscan.", date: "Q2 2026" },
               { status: "done", label: "Completed", title: "Open Source Release", desc: "Full source code published on GitHub. Smart contracts verified on Polygonscan.", date: "Q2 2025" },
               { status: "active", label: "In Progress", title: "Community Growth", desc: "Expanding the worker network, applying for ecosystem grants, building the leaderboard and dashboard.", date: "Q3 2026" },
-              { status: "upcoming", label: "Upcoming", title: "Mainnet Launch", desc: "Migration from Amoy Testnet to Polygon Mainnet. Real token value, real rewards.", date: "Q4 2026" },
+              
               { status: "upcoming", label: "Upcoming", title: "Governance Module", desc: "GWC holders vote on network parameters: reward weights, epoch length, research directions.", date: "Q2 2027" },
               { status: "upcoming", label: "Upcoming", title: "CEX / DEX Listing", desc: "List GWC on decentralised exchanges (Uniswap, QuickSwap) and pursue centralised exchange listings.", date: "Q3 2027" },
               { status: "upcoming", label: "Upcoming", title: "Mobile Worker App", desc: "Lightweight Android/iOS app that contributes idle compute to the network while your phone charges.", date: "2027" },
@@ -983,7 +984,7 @@ export default function Home() {
 
               <div className="mt-6 p-4 rounded-xl" style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)" }}>
                 <p className="text-sm" style={{ color: "#94a3b8" }}>
-                  <span className="font-semibold" style={{ color: "#06b6d4" }}>Smart contract verified</span> on Polygon Amoy Testnet.{" "}
+                  <span className="font-semibold" style={{ color: "#06b6d4" }}>Smart contract verified</span> on Polygon Mainnet.{" "}
                   <a href={POLYGONSCAN_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#06b6d4] transition-colors">View on Polygonscan →</a>
                 </p>
               </div>
@@ -1009,8 +1010,8 @@ export default function Home() {
               { q: "What hardware do I need?", a: "Any modern CPU will work — no GPU required. The worker is designed to run on standard laptops and desktops. Minimum: 2-core CPU, 2 GB RAM, 200 MB disk space, and a stable internet connection." },
               { q: "How much GWC can I earn per day?", a: "Earnings depend on your hardware speed, the number of tasks completed, and the total network size. The more tasks you complete per epoch (24 hours), the larger your share of that epoch's reward pool. The leaderboard on this page shows current top earners." },
               { q: "How are rewards calculated and verified?", a: "After each epoch, the coordinator collects all task results, computes a Merkle root of contributions, and distributes rewards proportionally via the smart contract on Polygon. Every epoch's results are publicly verifiable on-chain." },
-              { q: "When can I trade or sell GWC?", a: "GWC is currently on Polygon Amoy Testnet. Mainnet launch and DEX listing are on the roadmap for Q4 2026. Once live on mainnet, GWC will be tradeable on Uniswap and QuickSwap." },
-              { q: "What is Polygon Amoy Testnet?", a: "Amoy is Polygon's official test network — it uses real infrastructure but testnet tokens have no monetary value yet. This lets us prove the system works before committing to mainnet. All rewards earned now will carry over to mainnet at launch." },
+              { q: "When can I trade or sell GWC?", a: "GWC is live on Polygon Mainnet. DEX listing is on the roadmap — GWC will be tradeable on Uniswap and QuickSwap once liquidity is seeded." },
+              { q: "What blockchain does GWC run on?", a: "GWC is deployed on Polygon Mainnet — a fast, low-fee EVM-compatible blockchain. All reward distributions happen on-chain via verified smart contracts, fully transparent and auditable by anyone." },
               { q: "Is GWC open source? Can I audit the code?", a: "Yes. The worker client, coordinator server, and smart contracts are all open source on GitHub. We encourage the community to audit, fork, and contribute." },
               { q: "How do I claim my rewards?", a: "Rewards are automatically credited to the wallet address you configure in the worker client. After each epoch, the smart contract distributes tokens directly to your wallet — no manual claiming required." },
             ].map((item, i) => (
@@ -1145,7 +1146,7 @@ export default function Home() {
                 <div className="space-y-3">
                   {[
                     { label: "GWC Token", value: GWC_TOKEN, link: POLYGONSCAN_URL },
-                    { label: "Reward Escrow", value: ESCROW_ADDR, link: `https://amoy.polygonscan.com/address/${ESCROW_ADDR}` },
+                    { label: "Reward Pool", value: ESCROW_ADDR, link: `https://polygonscan.com/address/${ESCROW_ADDR}` },
                   ].map(c => (
                     <div key={c.label}>
                       <div className="text-xs mb-1" style={{ color: "#475569" }}>{c.label}</div>
@@ -1222,7 +1223,7 @@ export default function Home() {
           </div>
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(51,65,85,0.3)" }}>
             <p className="text-xs" style={{ color: "#334155" }}>© 2026 GreenWaveCoin. Open source under MIT License.</p>
-            <p className="text-xs" style={{ color: "#334155" }}>Polygon Amoy Testnet — Mainnet coming soon</p>
+            <p className="text-xs" style={{ color: "#334155" }}>Polygon Mainnet — Live</p>
           </div>
         </div>
       </footer>

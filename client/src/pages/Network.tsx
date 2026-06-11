@@ -11,7 +11,7 @@ import {
   Cpu, Clock, RefreshCw, Loader2, ExternalLink
 } from "lucide-react";
 
-const POLYGONSCAN_URL = "https://amoy.polygonscan.com/address/";
+const POLYGONSCAN_URL = "https://polygonscan.com/address/";
 
 interface NetworkStatus {
   total_tasks?: number;
@@ -108,7 +108,7 @@ export default function Network() {
           <span className="text-sm font-semibold" style={{ color: error ? "#f87171" : "#10b981" }}>
             {error ? "Coordinator Offline" : "Network Healthy"}
           </span>
-          <span className="text-xs ml-auto" style={{ color: "#475569" }}>Polygon Amoy Testnet</span>
+          <span className="text-xs ml-auto" style={{ color: "#475569" }}>Polygon Mainnet</span>
         </div>
 
         {/* Stats Grid */}

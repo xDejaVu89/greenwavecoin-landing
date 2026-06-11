@@ -133,7 +133,7 @@ export default function Grants() {
 
               <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>
                 The Polygon Foundation Community Grants Programme funds open-source projects that build on or strengthen the Polygon ecosystem.
-                GreenWaveCoin is a strong candidate: the GWC token is deployed on Polygon Amoy Testnet, all reward distributions happen on-chain via a verified smart contract,
+                GreenWaveCoin is a strong candidate: the GWC token is deployed on Polygon Mainnet, all reward distributions happen on-chain via a verified smart contract,
                 and the project is fully open source under an MIT licence.
               </p>
 
@@ -143,8 +143,8 @@ export default function Grants() {
                 {[
                   { label: "Project Name", value: "GreenWaveCoin (GWC)" },
                   { label: "Category", value: "DeFi Infrastructure / Decentralised Compute" },
-                  { label: "Network", value: "Polygon Amoy Testnet (mainnet migration planned)" },
-                  { label: "Token Contract", value: "0x6D938b4C48300A29905FBa272cCdC1207538865f" },
+                  { label: "Network", value: "Polygon Mainnet" },
+                  { label: "Token Contract", value: "0x74e4F6597095d0807b77D7080E93B77331513585" },
                   { label: "GitHub", value: "https://github.com/xDejaVu89/greenwavecoin" },
                   { label: "Requested Amount", value: "$10,000 – $25,000 USD equivalent in MATIC/POL" },
                 ].map(row => (
@@ -163,14 +163,14 @@ export default function Grants() {
                 <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "#94a3b8" }}>
 {`GreenWaveCoin is an open-source, decentralised compute network that distributes neural architecture search (NAS) tasks to volunteer workers running on consumer hardware. Workers contribute idle CPU cycles to evaluate candidate neural network architectures against benchmark datasets. Each completed evaluation is cryptographically verified and recorded on-chain. Workers are rewarded with GWC tokens at the end of each 24-hour epoch, with distribution proportional to the number of verified tasks completed.
 
-The project runs on Polygon because of its low transaction fees, fast finality, and strong developer tooling. The GWC ERC-20 token and the epoch escrow contract are both deployed on Polygon Amoy Testnet and verified on Polygonscan.
+The project runs on Polygon because of its low transaction fees, fast finality, and strong developer tooling. The GWC ERC-20 token and the reward pool contract are both deployed on Polygon Mainnet and verified on Polygonscan.
 
-Grant funds would be used for: (1) a professional smart contract security audit before mainnet deployment, (2) exchange listing fees to establish a liquid market for GWC, (3) infrastructure costs for the coordinator server during the mainnet launch period, and (4) developer bounties to attract open-source contributors.
+Grant funds would be used for: (1) a professional smart contract security audit, (2) exchange listing fees to establish a liquid market for GWC, (3) infrastructure costs for the coordinator server, and (4) developer bounties to attract open-source contributors.
 
 All code is MIT-licensed and publicly available on GitHub. The project has no venture capital backing and is entirely community-funded.`}
                 </p>
                 <button
-                  onClick={() => navigator.clipboard.writeText(`GreenWaveCoin is an open-source, decentralised compute network that distributes neural architecture search (NAS) tasks to volunteer workers running on consumer hardware. Workers contribute idle CPU cycles to evaluate candidate neural network architectures against benchmark datasets. Each completed evaluation is cryptographically verified and recorded on-chain. Workers are rewarded with GWC tokens at the end of each 24-hour epoch, with distribution proportional to the number of verified tasks completed.\n\nThe project runs on Polygon because of its low transaction fees, fast finality, and strong developer tooling. The GWC ERC-20 token and the epoch escrow contract are both deployed on Polygon Amoy Testnet and verified on Polygonscan.\n\nGrant funds would be used for: (1) a professional smart contract security audit before mainnet deployment, (2) exchange listing fees to establish a liquid market for GWC, (3) infrastructure costs for the coordinator server during the mainnet launch period, and (4) developer bounties to attract open-source contributors.\n\nAll code is MIT-licensed and publicly available on GitHub. The project has no venture capital backing and is entirely community-funded.`)}
+                  onClick={() => navigator.clipboard.writeText(`GreenWaveCoin is an open-source, decentralised compute network that distributes neural architecture search (NAS) tasks to volunteer workers running on consumer hardware. Workers contribute idle CPU cycles to evaluate candidate neural network architectures against benchmark datasets. Each completed evaluation is cryptographically verified and recorded on-chain. Workers are rewarded with GWC tokens at the end of each 24-hour epoch, with distribution proportional to the number of verified tasks completed.\n\nThe project runs on Polygon because of its low transaction fees, fast finality, and strong developer tooling. The GWC ERC-20 token and the reward pool contract are both deployed on Polygon Mainnet and verified on Polygonscan.\n\nGrant funds would be used for: (1) a professional smart contract security audit, (2) exchange listing fees to establish a liquid market for GWC, (3) infrastructure costs for the coordinator server, and (4) developer bounties to attract open-source contributors.\n\nAll code is MIT-licensed and publicly available on GitHub. The project has no venture capital backing and is entirely community-funded.`)}
                   className="mt-3 flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg"
                   style={{ background: "rgba(139,92,246,0.1)", color: "#8b5cf6", border: "1px solid rgba(139,92,246,0.3)" }}
                 >
