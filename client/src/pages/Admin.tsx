@@ -14,6 +14,7 @@ import {
   ArrowLeft, Plus, Edit3, Trash2, Eye, EyeOff,
   Save, X, FileText, CheckCircle, Clock, Zap
 } from "lucide-react";
+import { Streamdown } from "streamdown";
 
 // ─── Slug helper ─────────────────────────────────────────────────────────────
 function toSlug(title: string) {
@@ -107,10 +108,12 @@ function PostForm({ initial, onSave, onCancel }: PostFormProps) {
       )}
 
       {preview ? (
-        <div className="prose prose-invert max-w-none">
-          <h1 style={{ color: "#f0f9ff", fontFamily: "Syne, sans-serif" }}>{title || "Untitled"}</h1>
-          {excerpt && <p style={{ color: "#94a3b8", fontStyle: "italic" }}>{excerpt}</p>}
-          <div style={{ color: "#cbd5e1", whiteSpace: "pre-wrap", lineHeight: 1.8 }}>{content}</div>
+        <div className="prose prose-invert max-w-none" style={{ color: "#cbd5e1" }}>
+          <h1 style={{ color: "#f0f9ff", fontFamily: "Syne, sans-serif", marginBottom: "0.5rem" }}>{title || "Untitled"}</h1>
+          {excerpt && <p style={{ color: "#94a3b8", fontStyle: "italic", marginBottom: "1rem" }}>{excerpt}</p>}
+          <div style={{ lineHeight: 1.8 }}>
+            <Streamdown>{content || "_Nothing to preview yet._"}</Streamdown>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

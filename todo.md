@@ -83,20 +83,20 @@
 - [x] Update coordinator URL placeholder if a proper domain is available (using nip.io domain, no change needed)
 
 ## Phase 12 — Worker Benchmarking Tool
-- [ ] /benchmark page with CPU spec input form
-- [ ] Estimated tasks/day and GWC earnings calculator
-- [ ] Shareable results card
-- [ ] Link from nav and footer
+- [x] /benchmark page with CPU spec input form
+- [x] Estimated tasks/day and GWC earnings calculator
+- [x] Shareable results card
+- [x] Link from nav and footer
 
 ## Phase 13 — NFT Milestone Badges
-- [ ] DB table: badges (userId, milestone, txHash, mintedAt)
-- [ ] tRPC procedures: badges.getMy, badges.claim
-- [ ] Milestone logic: 100 tasks, 1000 tasks, top-10 leaderboard
-- [ ] Badge display on dashboard
-- [ ] Share badge on X button
+- [x] DB table: badges (userId, milestone, txHash, mintedAt)
+- [x] tRPC procedures: badges.getMy, badges.claim
+- [x] Milestone logic: 100 tasks, 1000 tasks, top-10 leaderboard
+- [x] Badge display on dashboard
+- [x] Share badge on X button
 
 ## Phase 14 — Admin Blog Dashboard
-- [ ] /admin route (admin-only protected)
-- [ ] Post list with edit/delete/publish/draft toggle
-- [ ] Rich post editor with markdown preview
-- [ ] Link from dashboard for admin users
+- [x] /admin route (admin-only protected)
+- [x] Post list with edit/delete/publish/draft toggle
+- [x] Rich post editor with markdown preview
+- [x] Link from dashboard for admin users
