@@ -22,10 +22,10 @@ export default function Dashboard() {
   const { user, loading, logout } = useAuth();
 
   // Use server-side cached tRPC procedures instead of direct coordinator fetches
-  const { data: statsResult } = trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 1 });
+  const { data: statsResult } = trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 2, retryDelay: 3000, retryOnMount: true });
   const coordinatorStats = statsResult?.data ?? null;
 
-  const { data: lbResult } = trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 1 });
+  const { data: lbResult } = trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 2, retryDelay: 3000, retryOnMount: true });
   const rawLb = Array.isArray(lbResult?.data) ? lbResult.data : [];
   const leaderboard: { wallet: string; tasks: number; rank: number }[] = rawLb.map(
     (e: { wallet: string; tasks: number }, i: number) => ({ ...e, rank: i + 1 })

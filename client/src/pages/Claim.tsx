@@ -101,7 +101,7 @@ export default function Claim() {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const networkStats = trpc.network.getStats.useQuery(undefined, { retry: 1 });
+  const networkStats = trpc.network.getStats.useQuery(undefined, { retry: 2, retryDelay: 3000, retryOnMount: true });
   const latestEpoch = (networkStats.data as { data?: { current_epoch?: number } } | undefined)?.data?.current_epoch ?? null;
 
   const publicClient = createPublicClient({ chain: polygon, transport: http("https://polygon-rpc.com") });

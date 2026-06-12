@@ -34,9 +34,9 @@ export default function Network() {
   const PER_PAGE = 25;
 
   const { data: statsResult, isLoading: statsLoading, isError: statsError, refetch: refetchStats } =
-    trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 1 });
+    trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 2, retryDelay: 3000, retryOnMount: true });
   const { data: lbResult, isLoading: lbLoading, refetch: refetchLb } =
-    trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 1 });
+    trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 2, retryDelay: 3000, retryOnMount: true });
 
   const status: NetworkStatus | null = statsResult?.data ?? null;
   const leaders: LeaderEntry[] = Array.isArray(lbResult?.data) ? lbResult.data : [];

@@ -160,7 +160,9 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
 function useNetworkStats() {
   const { data, isError } = trpc.network.getStats.useQuery(undefined, {
     refetchInterval: 30_000,
-    retry: 1,
+    retry: 2,
+    retryDelay: 3000,
+    retryOnMount: true,
   });
 
   const d = data?.data;
@@ -178,7 +180,9 @@ function useNetworkStats() {
 function useLeaderboard() {
   const { data } = trpc.network.getLeaderboard.useQuery(undefined, {
     refetchInterval: 60_000,
-    retry: 1,
+    retry: 2,
+    retryDelay: 3000,
+    retryOnMount: true,
   });
 
   const raw = data?.data ?? [];
@@ -195,7 +199,9 @@ function useLeaderboard() {
 function GWCPriceTicker() {
   const { data, isLoading } = trpc.network.getPrice.useQuery(undefined, {
     refetchInterval: 60_000,
-    retry: 1,
+    retry: 2,
+    retryDelay: 3000,
+    retryOnMount: true,
   });
 
   const price = data?.price_usd ? parseFloat(data.price_usd) : null;
