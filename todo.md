@@ -110,3 +110,18 @@
 - [x] Prepare CoinMarketCap listing application
 - [x] Add live GWC price ticker to landing site homepage (QuickSwap subgraph / GeckoTerminal API)
 - [x] Build on-chain worker claim portal page (connect wallet, show claimable GWC, submit Merkle proof)
+
+## Phase 16 — RewardEscrowV2 & Grant Application
+
+- [x] Deploy RewardEscrowV2 to Polygon Mainnet (0xB73385634051a14Be22B2973Fc530A122e3548B0)
+- [x] Fund RewardEscrowV2 with 4,985,000 GWC
+- [x] Fix flash protection parameters (maxTransferAmount=210,000 GWC, maxTransfersPerBlock=5)
+- [x] Add /api/rewards/proof endpoint to coordinator backend
+- [x] Fix Claim.tsx to use correct RewardEscrowV2 ABI (index-based claim with Merkle proof)
+- [x] Update Grants page with full milestones table, use of funds breakdown, and all 4 contract addresses
+- [x] Write complete Polygon Foundation grant application document (polygon-grant-application.md)
+- [x] Write CoinGecko listing submission document
+- [x] Write CoinMarketCap listing submission document
+- [x] Write trust-wallet assets PR submission guide
+- [x] Write Twitter/X and Discord setup materials
+- [x] Generate GWC token logo (256x256 PNG for trust-wallet assets repo)

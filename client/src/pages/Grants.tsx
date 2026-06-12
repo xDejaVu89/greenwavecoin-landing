@@ -178,6 +178,71 @@ All code is MIT-licensed and publicly available on GitHub. The project has no ve
                 </button>
               </div>
 
+              {/* Use of Funds */}
+              <div className="rounded-lg p-4" style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "#8b5cf6" }}>Use of Funds — $25,000</div>
+                <div className="space-y-2">
+                  {[
+                    { item: "Smart Contract Security Audit", amount: "$12,000", desc: "Professional audit by a recognised firm (OpenZeppelin, Halborn, or Code4rena contest)" },
+                    { item: "QuickSwap Liquidity Pool Seed", amount: "$6,000", desc: "Seed a GWC/POL pool to establish a real market price for worker earnings" },
+                    { item: "Infrastructure & Hosting", amount: "$3,000", desc: "12 months of coordinator server, RPC node access, and CDN costs" },
+                    { item: "Developer Bounties", amount: "$4,000", desc: "macOS/Linux worker client, additional NAS task types, posted on Gitcoin" },
+                  ].map(r => (
+                    <div key={r.item} className="flex items-start gap-3 py-2" style={{ borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
+                      <span className="text-xs font-mono font-bold w-16 flex-shrink-0 pt-0.5" style={{ color: "#8b5cf6" }}>{r.amount}</span>
+                      <div>
+                        <div className="text-xs font-semibold" style={{ color: "#f0f9ff" }}>{r.item}</div>
+                        <div className="text-xs mt-0.5" style={{ color: "#64748b" }}>{r.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Milestones */}
+              <div className="rounded-lg p-4" style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "#8b5cf6" }}>Delivery Milestones</div>
+                <div className="space-y-3">
+                  {[
+                    { month: "Month 1", milestone: "Smart contract security audit complete", metric: "Audit report published on GitHub, all critical/high findings resolved" },
+                    { month: "Month 1", milestone: "RewardEscrowV2 live, first epoch published", metric: "Workers can successfully call claim() on-chain" },
+                    { month: "Month 2", milestone: "QuickSwap GWC/POL liquidity pool live", metric: "Pool address on Polygonscan, minimum $5,000 TVL" },
+                    { month: "Month 2", milestone: "CoinGecko and CoinMarketCap listings approved", metric: "GWC price visible on both platforms" },
+                    { month: "Month 3", milestone: "100 active registered workers", metric: "Public leaderboard showing ≥100 unique wallet addresses" },
+                    { month: "Month 3", milestone: "macOS and Linux worker client released", metric: "Signed binaries for all three platforms on GitHub Releases" },
+                    { month: "Month 4", milestone: "Gitcoin grant campaign launched", metric: "Active Gitcoin Grants page, community matching round participation" },
+                    { month: "Month 4", milestone: "500 total task completions on-chain", metric: "Verifiable via coordinator API and leaderboard" },
+                  ].map((r, i) => (
+                    <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: "1px solid rgba(139,92,246,0.1)" }}>
+                      <span className="text-xs font-mono font-bold w-16 flex-shrink-0 pt-0.5" style={{ color: "#8b5cf6" }}>{r.month}</span>
+                      <div>
+                        <div className="text-xs font-semibold" style={{ color: "#f0f9ff" }}>{r.milestone}</div>
+                        <div className="text-xs mt-0.5" style={{ color: "#64748b" }}>{r.metric}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Current Status */}
+              <div className="rounded-lg p-4" style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "#10b981" }}>Current Deployment Status</div>
+                <div className="space-y-2">
+                  {[
+                    { label: "GWC Token", addr: "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9", status: "Deployed & verified" },
+                    { label: "Staking Contract", addr: "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86", status: "Funded with 2.1M GWC" },
+                    { label: "Timelock", addr: "0xC3F5B6f9E9b531146D23F702AbE930318159Ed02", status: "Deployed & verified" },
+                    { label: "RewardEscrowV2", addr: "0xB73385634051a14Be22B2973Fc530A122e3548B0", status: "Funded with 4,985,000 GWC" },
+                  ].map(r => (
+                    <div key={r.label} className="flex items-center gap-3">
+                      <span className="text-xs w-28 flex-shrink-0" style={{ color: "#64748b" }}>{r.label}</span>
+                      <span className="text-xs font-mono flex-1 truncate" style={{ color: "#f0f9ff" }}>{r.addr}<CopyButton text={r.addr} /></span>
+                      <span className="text-xs flex-shrink-0" style={{ color: "#10b981" }}>{r.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <a
                 href="https://polygon.technology/grants"
                 target="_blank"
