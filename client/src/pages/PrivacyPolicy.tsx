@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
             </ul>
             <p>
               To exercise any of these rights, contact us at{" "}
-              <a href="mailto:greenwavecoin@gmail.com" className="hover:underline" style={{ color: "#06b6d4" }}>greenwavecoin@gmail.com</a>.
+              <a href="mailto:gwc@greenwavecoin.com" className="hover:underline" style={{ color: "#06b6d4" }}>gwc@greenwavecoin.com</a>.
             </p>
           </Section>
 
@@ -170,7 +170,7 @@ export default function PrivacyPolicy() {
             <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
             <div className="mt-4 p-5 rounded-xl" style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.15)" }}>
               <p className="text-sm font-semibold mb-1" style={{ color: "#06b6d4" }}>GreenWaveCoin</p>
-              <p className="text-sm" style={{ color: "#94a3b8" }}>Email: <a href="mailto:greenwavecoin@gmail.com" className="hover:underline" style={{ color: "#06b6d4" }}>greenwavecoin@gmail.com</a></p>
+              <p className="text-sm" style={{ color: "#94a3b8" }}>Email: <a href="mailto:gwc@greenwavecoin.com" className="hover:underline" style={{ color: "#06b6d4" }}>gwc@greenwavecoin.com</a></p>
               <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>X / Twitter: <a href="https://x.com/GreenWaveCoin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#06b6d4" }}>@GreenWaveCoin</a></p>
               <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>GitHub: <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#06b6d4" }}>xDejaVu89/greenwavecoin</a></p>
             </div>
