@@ -18,11 +18,12 @@ const REWARD_POOL_ADDRESS = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86" as cons
 const GWC_TOKEN_ADDRESS = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9" as const;
 const COORDINATOR_URL = "https://206.81.5.13.nip.io";
 
+// RewardEscrowV2 ABI — Merkle-based claim with index
 const REWARD_POOL_ABI = parseAbi([
-  "function latestEpochId() view returns (uint256)",
-  "function claimed(address worker) view returns (uint256)",
-  "function claimableAmount(address worker, uint256 epochId, uint256 cumulativeAmount, bytes32[] proof) view returns (uint256)",
-  "function claim(uint256 epochId, uint256 cumulativeAmount, bytes32[] proof) external",
+  "function isClaimed(uint256 epoch, uint256 index) view returns (bool)",
+  "function merkleRoots(uint256 epoch) view returns (bytes32)",
+  "function epochTotals(uint256 epoch) view returns (uint256)",
+  "function claim(uint256 epoch, uint256 index, address account, uint256 amount, bytes32[] proof) external",
 ]);
 
 const ERC20_ABI = parseAbi([
@@ -31,9 +32,11 @@ const ERC20_ABI = parseAbi([
 
 type ClaimData = {
   epochId: bigint;
-  cumulativeAmount: bigint;
+  index: bigint;
+  amount: bigint;  // in wei
+  amountGwc: string;
   proof: `0x${string}`[];
-  claimable: bigint;
+  alreadyClaimed: boolean;
 };
 
 type TxState = "idle" | "pending" | "success" | "error";
@@ -76,13 +79,13 @@ async function switchToPolygon(): Promise<boolean> {
   }
 }
 
-async function fetchClaimData(wallet: string): Promise<{ epochId: number; cumulativeAmount: string; proof: string[] } | null> {
+async function fetchClaimData(wallet: string): Promise<{ epochId: number; index: number; cumulativeAmount: string; amountGwc: string; proof: string[] } | null> {
   try {
     const res = await fetch(`${COORDINATOR_URL}/api/rewards/proof?wallet=${wallet}`, {
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
-    return await res.json() as { epochId: number; cumulativeAmount: string; proof: string[] };
+    return await res.json() as { epochId: number; index: number; cumulativeAmount: string; amountGwc: string; proof: string[] };
   } catch {
     return null;
   }
@@ -127,17 +130,20 @@ export default function Claim() {
       }
 
       const epochId = BigInt(data.epochId);
-      const cumulativeAmount = BigInt(data.cumulativeAmount);
+      const index = BigInt(data.index ?? 0);
+      const amount = BigInt(data.cumulativeAmount);
+      const amountGwc = data.amountGwc ?? "0";
       const proof = data.proof as `0x${string}`[];
 
-      const claimable = await publicClient.readContract({
+      // Check if already claimed on-chain
+      const alreadyClaimed = await publicClient.readContract({
         address: REWARD_POOL_ADDRESS,
         abi: REWARD_POOL_ABI,
-        functionName: "claimableAmount",
-        args: [addr as `0x${string}`, epochId, cumulativeAmount, proof],
-      }) as bigint;
+        functionName: "isClaimed",
+        args: [epochId, index],
+      }) as boolean;
 
-      setClaimData({ epochId, cumulativeAmount, proof, claimable });
+      setClaimData({ epochId, index, amount, amountGwc, proof, alreadyClaimed });
     } catch (e) {
       setError("Failed to load claim data. Please try again.");
       console.error(e);
@@ -164,7 +170,7 @@ export default function Claim() {
   };
 
   const handleClaim = async () => {
-    if (!wallet || !claimData || claimData.claimable === 0n) return;
+    if (!wallet || !claimData || claimData.alreadyClaimed) return;
     setTxState("pending");
     setError(null);
     try {
@@ -176,7 +182,7 @@ export default function Claim() {
         address: REWARD_POOL_ADDRESS,
         abi: REWARD_POOL_ABI,
         functionName: "claim",
-        args: [claimData.epochId, claimData.cumulativeAmount, claimData.proof],
+        args: [claimData.epochId, claimData.index, wallet as `0x${string}`, claimData.amount, claimData.proof],
         account: wallet as `0x${string}`,
       });
       setTxHash(hash);
@@ -209,7 +215,7 @@ export default function Claim() {
   }, []);
 
   const isWrongNetwork = wallet !== null && chainId !== null && chainId !== 137;
-  const claimableGWC = claimData ? parseFloat(formatUnits(claimData.claimable, 18)) : 0;
+  const claimableGWC = claimData && !claimData.alreadyClaimed ? parseFloat(claimData.amountGwc) : 0;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#020b18", color: "#f0f9ff" }}>
@@ -426,7 +432,7 @@ export default function Claim() {
               )}
 
               {/* No rewards */}
-              {!loadingClaim && claimData && claimData.claimable === 0n && (
+              {!loadingClaim && claimData && claimData.alreadyClaimed && (
                 <div className="text-center py-10">
                   <div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
@@ -436,9 +442,7 @@ export default function Claim() {
                   </div>
                   <p className="font-semibold mb-2">No Claimable Rewards</p>
                   <p className="text-sm" style={{ color: "#64748b" }}>
-                    {claimData.cumulativeAmount > 0n
-                      ? "You have already claimed all available rewards for the current epoch."
-                      : "No rewards have been allocated to this wallet yet. Keep running the worker!"}
+                    You have already claimed all available rewards for the current epoch.
                   </p>
                   <Button
                     variant="outline"
@@ -455,7 +459,7 @@ export default function Claim() {
               {/* Claimable */}
               {!loadingClaim &&
                 claimData &&
-                claimData.claimable > 0n &&
+                !claimData.alreadyClaimed &&
                 txState !== "success" && (
                   <div>
                     <div
