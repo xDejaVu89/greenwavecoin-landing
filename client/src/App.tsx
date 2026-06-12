@@ -13,6 +13,7 @@ import Grants from "./pages/Grants";
 import Benchmark from "./pages/Benchmark";
 import Admin from "./pages/Admin";
 import Claim from "./pages/Claim";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/benchmark"} component={Benchmark} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/claim"} component={Claim} />
+      <Route path={"/privacy"} component={PrivacyPolicy} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

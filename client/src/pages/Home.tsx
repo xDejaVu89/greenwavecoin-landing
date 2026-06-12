@@ -1305,7 +1305,10 @@ export default function Home() {
           </div>
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(51,65,85,0.3)" }}>
             <p className="text-xs" style={{ color: "#334155" }}>© 2026 GreenWaveCoin. Open source under MIT License.</p>
-            <p className="text-xs" style={{ color: "#334155" }}>Polygon Mainnet — Live</p>
+            <div className="flex items-center gap-4">
+              <a href="/privacy" className="text-xs hover:text-[#06b6d4] transition-colors" style={{ color: "#334155" }}>Privacy Policy</a>
+              <p className="text-xs" style={{ color: "#334155" }}>Polygon Mainnet — Live</p>
+            </div>
           </div>
         </div>
       </footer>
