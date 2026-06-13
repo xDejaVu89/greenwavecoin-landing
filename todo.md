@@ -129,7 +129,7 @@
 ## Phase 17 — Email, DNS, Blog & Worker Updates
 
 - [ ] Add SPF TXT DNS record (send / v=spf1 include:amazonses.com ~all) in Squarespace
-- [ ] Write and publish technical blog post "GreenWaveCoin: How It Works" to website
-- [ ] Pre-fill CoinGecko listing application (ready to submit once liquidity pool is live)
-- [ ] Pre-fill CoinMarketCap listing application (ready to submit once liquidity pool is live)
-- [ ] Add worker auto-update version check on startup (v1.0.4)
+- [x] Write and publish technical blog post "GreenWaveCoin: How It Works" to website
+- [x] Pre-fill CoinGecko listing application (ready to submit once liquidity pool is live)
+- [x] Pre-fill CoinMarketCap listing application (ready to submit once liquidity pool is live)
+- [x] Add worker auto-update version check on startup (v1.0.4)
