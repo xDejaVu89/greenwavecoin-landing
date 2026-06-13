@@ -3,6 +3,7 @@ import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { notifyOwner } from "./_core/notification";
+import { sendWaitlistConfirmation } from "./email";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -23,7 +24,7 @@ import {
   walletAlreadyOnWaitlist,
 } from "./db";
 
-const COORDINATOR_URL = "https://206.81.5.13.nip.io";
+const COORDINATOR_URL = "https://api.greenwavecoin.com";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 async function fetchWithCache<T>(
@@ -105,6 +106,11 @@ export const appRouter = router({
           title: "New Waitlist Registration",
           content: `Wallet: ${wallet}${email ? `\nEmail: ${email}` : ""}\nTotal on waitlist: ${total}`,
         }).catch(() => {});
+
+        // Send confirmation email to subscriber if email provided
+        if (email) {
+          await sendWaitlistConfirmation({ email, walletAddress: wallet, position: total }).catch(() => {});
+        }
 
         return { success: true, position: total };
       }),
