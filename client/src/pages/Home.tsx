@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { useNetworkStats, useLeaderboard, useGWCPrice } from "@/hooks/useCoordinator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -156,56 +157,13 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
   return <span ref={ref}>{display.toLocaleString()}{suffix}</span>;
 }
 
-// ─── Network Stats Hook ──────────────────────────────────────────────────────
-function useNetworkStats() {
-  const { data, isError } = trpc.network.getStats.useQuery(undefined, {
-    refetchInterval: 30_000,
-    retry: 2,
-    retryDelay: 3000,
-    retryOnMount: true,
-  });
-
-  const d = data?.data;
-  // Use networkStatus from coordinator ("active" = live) if available.
-  // Default to "ok" while loading — we know the network is live; only show "offline" on confirmed error.
-  const networkStatus = (d as any)?.networkStatus;
-  const status = isError ? "offline" : networkStatus === "unknown" ? "offline" : "ok";
-
-  return {
-    queueLength: 0,
-    totalResults: d?.total_tasks ?? 0,
-    uniqueWorkers: d?.active_workers ?? 0,
-    status,
-  };
-}
-
-// ─── Leaderboard Hook ────────────────────────────────────────────────────────
-function useLeaderboard() {
-  const { data } = trpc.network.getLeaderboard.useQuery(undefined, {
-    refetchInterval: 60_000,
-    retry: 2,
-    retryDelay: 3000,
-    retryOnMount: true,
-  });
-
-  const raw = data?.data ?? [];
-  const arr = Array.isArray(raw) ? raw : [];
-  return arr.map((e: { wallet: string; tasks: number; avgAccuracy?: number }) => ({
-    wallet: e.wallet,
-    tasks: e.tasks,
-    avgAccuracy: e.avgAccuracy ?? 0,
-  }));
-}
+// ─── Network Stats Hook — fetches directly from coordinator (static-safe) ────
+// (useNetworkStats and useLeaderboard imported from @/hooks/useCoordinator)
 
 // ─── Waitlist Section ─────────────────────────────────────────────────────────
-// ─── GWC Price Ticker ─────────────────────────────────────────────────
+// ─── GWC Price Ticker — fetches directly from GeckoTerminal (static-safe) ────
 function GWCPriceTicker() {
-  const { data, isLoading } = trpc.network.getPrice.useQuery(undefined, {
-    refetchInterval: 60_000,
-    retry: 2,
-    retryDelay: 3000,
-    retryOnMount: true,
-  });
+  const { data, isLoading } = useGWCPrice(60_000);
 
   const price = data?.price_usd ? parseFloat(data.price_usd) : null;
   const change24h = data?.price_change_24h ?? null;
@@ -453,7 +411,7 @@ export default function Home() {
   let { user, loading, error, isAuthenticated, logout } = useAuth();
 
   const stats = useNetworkStats();
-  const leaders = useLeaderboard();
+  const { data: leaders } = useLeaderboard();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   useScrollReveal();
@@ -917,7 +875,7 @@ export default function Home() {
                   <div className="text-right font-mono-data text-sm" style={{ fontFamily: "JetBrains Mono, monospace" }}>
                     <span style={{ color: "#06b6d4" }}>{w.tasks}</span>
                     <span style={{ color: "#475569" }}> / </span>
-                    <span style={{ color: "#10b981" }}>{(w.avgAccuracy * 100).toFixed(1)}%</span>
+                    <span style={{ color: "#10b981" }}>{((w.avgAccuracy ?? 0) * 100).toFixed(1)}%</span>
                   </div>
                 </div>
               ))

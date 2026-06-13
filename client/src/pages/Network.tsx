@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { trpc } from "@/lib/trpc";
+import { useNetworkStats, useLeaderboard } from "@/hooks/useCoordinator";
 import {
   Zap, ArrowLeft, Activity, Users, Trophy, BarChart3,
   Cpu, Clock, RefreshCw, Loader2, ExternalLink
@@ -13,36 +13,19 @@ import {
 
 const POLYGONSCAN_URL = "https://polygonscan.com/address/";
 
-interface NetworkStatus {
-  total_tasks?: number;
-  active_workers?: number;
-  total_workers?: number;
-  current_epoch?: number;
-  best_accuracy?: number;
-  tasks_this_epoch?: number;
-  epoch_start?: string;
-}
-
-interface LeaderEntry {
-  wallet: string;
-  tasks: number;
-  accuracy?: number;
-}
-
 export default function Network() {
   const [page, setPage] = useState(1);
   const PER_PAGE = 25;
 
-  const { data: statsResult, isLoading: statsLoading, isError: statsError, refetch: refetchStats } =
-    trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 2, retryDelay: 3000, retryOnMount: true });
-  const { data: lbResult, isLoading: lbLoading, refetch: refetchLb } =
-    trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 2, retryDelay: 3000, retryOnMount: true });
+  const { status: networkStatus, totalResults, uniqueWorkers, currentEpoch, bestAccuracy, tasksThisEpoch, epochStart, isError, refetch: refetchStats } =
+    useNetworkStats(30_000);
+  const { data: leaders, isLoading: lbLoading, updatedAt: lastUpdated, refetch: refetchLb } =
+    useLeaderboard(60_000);
 
-  const status: NetworkStatus | null = statsResult?.data ?? null;
-  const leaders: LeaderEntry[] = Array.isArray(lbResult?.data) ? lbResult.data : [];
-  const loading = statsLoading || lbLoading;
-  const error = statsError;
-  const lastUpdated = statsResult?.updatedAt ?? null;
+  // Map to shape expected by the rest of the component
+  const status = { total_tasks: totalResults, active_workers: uniqueWorkers, current_epoch: currentEpoch, best_accuracy: bestAccuracy, tasks_this_epoch: tasksThisEpoch, epoch_start: epochStart };
+  const loading = lbLoading;
+  const error = isError;
 
   const handleRefresh = () => { refetchStats(); refetchLb(); };
 
@@ -115,7 +98,7 @@ export default function Network() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
           {[
             { icon: <Activity size={16} />, label: "Total Tasks", value: status?.total_tasks?.toLocaleString() ?? "—", color: "#06b6d4" },
-            { icon: <Users size={16} />, label: "Total Workers", value: status?.total_workers?.toLocaleString() ?? "—", color: "#10b981" },
+            { icon: <Users size={16} />, label: "Total Workers", value: status?.active_workers?.toLocaleString() ?? "—", color: "#10b981" },
             { icon: <Cpu size={16} />, label: "Active Now", value: status?.active_workers?.toLocaleString() ?? "—", color: "#8b5cf6" },
             { icon: <Clock size={16} />, label: "Current Epoch", value: status?.current_epoch?.toString() ?? "—", color: "#f59e0b" },
             { icon: <BarChart3 size={16} />, label: "Best Accuracy", value: status?.best_accuracy ? `${(status.best_accuracy * 100).toFixed(2)}%` : "—", color: "#06b6d4" },

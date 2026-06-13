@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { useNetworkStats, useLeaderboard } from "@/hooks/useCoordinator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getLoginUrl } from "@/const";
@@ -21,12 +22,11 @@ const POLYGONSCAN_URL = "https://polygonscan.com/address/";
 export default function Dashboard() {
   const { user, loading, logout } = useAuth();
 
-  // Use server-side cached tRPC procedures instead of direct coordinator fetches
-  const { data: statsResult } = trpc.network.getStats.useQuery(undefined, { refetchInterval: 30_000, retry: 2, retryDelay: 3000, retryOnMount: true });
-  const coordinatorStats = statsResult?.data ?? null;
+  // Direct coordinator fetches — works on static Vercel deployments
+  const { totalResults, uniqueWorkers, currentEpoch, bestAccuracy } = useNetworkStats(30_000);
+  const coordinatorStats = { total_tasks: totalResults, active_workers: uniqueWorkers, current_epoch: currentEpoch, best_accuracy: bestAccuracy };
 
-  const { data: lbResult } = trpc.network.getLeaderboard.useQuery(undefined, { refetchInterval: 60_000, retry: 2, retryDelay: 3000, retryOnMount: true });
-  const rawLb = Array.isArray(lbResult?.data) ? lbResult.data : [];
+  const { data: rawLb } = useLeaderboard(60_000);
   const leaderboard: { wallet: string; tasks: number; rank: number }[] = rawLb.map(
     (e: { wallet: string; tasks: number }, i: number) => ({ ...e, rank: i + 1 })
   );
