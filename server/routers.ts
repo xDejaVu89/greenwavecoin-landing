@@ -184,19 +184,49 @@ export const appRouter = router({
 
 
     getStats: publicProcedure.query(async () => {
-      return fetchWithCache(
+      // /api/ai/stats returns { totalTasksCompleted, uniqueWorkers, networkStatus: "active", ... }
+      const result = await fetchWithCache<{
+        totalTasksCompleted: number;
+        uniqueWorkers: number;
+        networkStatus: string;
+        bestAccuracyEver: number;
+      }>(
         "coordinator:status",
-        `${COORDINATOR_URL}/api/ai/status`,
-        { total_tasks: 0, active_workers: 0, total_workers: 0, current_epoch: 0, best_accuracy: 0 }
+        `${COORDINATOR_URL}/api/ai/stats`,
+        { totalTasksCompleted: 0, uniqueWorkers: 0, networkStatus: "unknown", bestAccuracyEver: 0 }
       );
+      // Normalise to the shape the frontend expects
+      const d = result.data;
+      return {
+        data: {
+          total_tasks: d.totalTasksCompleted,
+          active_workers: d.uniqueWorkers,
+          total_workers: d.uniqueWorkers,
+          current_epoch: 0,
+          best_accuracy: d.bestAccuracyEver,
+          networkStatus: d.networkStatus,
+        },
+        fromCache: result.fromCache,
+        updatedAt: result.updatedAt,
+      };
     }),
 
     getLeaderboard: publicProcedure.query(async () => {
-      return fetchWithCache(
+      // /api/ai/leaderboard returns { leaderboard: [...], totalResults: N }
+      const result = await fetchWithCache<{
+        leaderboard: { wallet: string; tasks: number; avgAccuracy?: number }[];
+        totalResults: number;
+      }>(
         "coordinator:leaderboard",
         `${COORDINATOR_URL}/api/ai/leaderboard`,
-        [] as { wallet: string; tasks: number }[]
+        { leaderboard: [], totalResults: 0 }
       );
+      // Unwrap to the array the frontend expects
+      return {
+        data: result.data.leaderboard ?? [],
+        fromCache: result.fromCache,
+        updatedAt: result.updatedAt,
+      };
     }),
   }),
 
