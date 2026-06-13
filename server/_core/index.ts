@@ -15,7 +15,7 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
 async function refreshCoordinatorCache() {
   const endpoints = [
-    { key: "coordinator:status", path: "/api/ai/status" },
+    { key: "coordinator:status", path: "/api/ai/stats" },
     { key: "coordinator:leaderboard", path: "/api/ai/leaderboard" },
   ];
   for (const { key, path } of endpoints) {
