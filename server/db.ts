@@ -91,6 +91,14 @@ export async function getUserByOpenId(openId: string) {
 
 // ── Waitlist ──────────────────────────────────────────────────────────────────
 
+/** Generate a random 8-character alphanumeric referral code */
+export function generateReferralCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no confusable chars (0/O, 1/I)
+  let code = "";
+  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
 export async function joinWaitlist(data: InsertWaitlist) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -109,6 +117,20 @@ export async function walletAlreadyOnWaitlist(walletAddress: string): Promise<bo
   if (!db) return false;
   const result = await db.select({ id: waitlist.id }).from(waitlist).where(eq(waitlist.walletAddress, walletAddress)).limit(1);
   return result.length > 0;
+}
+
+export async function getReferralCount(referralCode: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ value: count() }).from(waitlist).where(eq(waitlist.referredBy, referralCode));
+  return result[0]?.value ?? 0;
+}
+
+export async function getWaitlistEntryByCode(referralCode: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(waitlist).where(eq(waitlist.referralCode, referralCode)).limit(1);
+  return result[0] ?? undefined;
 }
 
 // ── Worker Profiles ───────────────────────────────────────────────────────────

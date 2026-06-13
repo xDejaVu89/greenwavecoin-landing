@@ -220,15 +220,26 @@ function GWCPriceTicker() {
 function WaitlistSection() {
   const [wallet, setWallet] = useState("");
   const [email, setEmail] = useState("");
+  const [referredByInput, setReferredByInput] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [position, setPosition] = useState<number | null>(null);
+  const [myReferralCode, setMyReferralCode] = useState<string | null>(null);
+  const [copiedReferral, setCopiedReferral] = useState(false);
   const [error, setError] = useState("");
+
+  // Read ?ref= query param from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) setReferredByInput(ref.toUpperCase());
+  }, []);
 
   const { data: countData } = trpc.waitlist.count.useQuery();
   const joinMutation = trpc.waitlist.join.useMutation({
     onSuccess: (data) => {
       setSubmitted(true);
       setPosition(data.position);
+      setMyReferralCode(data.referralCode ?? null);
       setError("");
     },
     onError: (err) => {
@@ -239,7 +250,22 @@ function WaitlistSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    joinMutation.mutate({ walletAddress: wallet, email: email || undefined });
+    joinMutation.mutate({
+      walletAddress: wallet,
+      email: email || undefined,
+      referredBy: referredByInput.trim().toUpperCase() || undefined,
+    });
+  };
+
+  const referralLink = myReferralCode
+    ? `${window.location.origin}/?ref=${myReferralCode}`
+    : null;
+
+  const copyReferralLink = () => {
+    if (!referralLink) return;
+    navigator.clipboard.writeText(referralLink);
+    setCopiedReferral(true);
+    setTimeout(() => setCopiedReferral(false), 2000);
   };
 
   return (
@@ -266,10 +292,45 @@ function WaitlistSection() {
                 <CheckCircle2 size={32} className="text-[#10b981]" />
               </div>
               <h3 className="font-bold text-2xl mb-2" style={{ fontFamily: "Syne, sans-serif", color: "#f0f9ff" }}>You're on the list!</h3>
-              <p className="text-sm" style={{ color: "#64748b" }}>
+              <p className="text-sm mb-6" style={{ color: "#64748b" }}>
                 You're number <span className="font-bold" style={{ color: "#10b981" }}>#{position}</span> on the waitlist.
                 We'll notify you when mainnet rewards go live.
               </p>
+
+              {referralLink && (
+                <div className="mt-2" style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: "12px", padding: "20px" }}>
+                  <p className="text-xs font-semibold mb-1" style={{ color: "#06b6d4", textTransform: "uppercase", letterSpacing: "0.1em" }}>Your Referral Link</p>
+                  <p className="text-xs mb-4" style={{ color: "#64748b" }}>
+                    Share this link to invite others. Each referral earns you bonus priority when rewards launch.
+                  </p>
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: "rgba(7,20,40,0.8)", border: "1px solid rgba(6,182,212,0.3)" }}>
+                    <span className="flex-1 text-xs font-mono truncate text-left" style={{ color: "#94a3b8" }}>{referralLink}</span>
+                    <button
+                      onClick={copyReferralLink}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold flex-shrink-0 transition-colors"
+                      style={{
+                        background: copiedReferral ? "rgba(16,185,129,0.15)" : "rgba(6,182,212,0.15)",
+                        color: copiedReferral ? "#10b981" : "#06b6d4",
+                        border: `1px solid ${copiedReferral ? "rgba(16,185,129,0.3)" : "rgba(6,182,212,0.3)"}`,
+                      }}
+                    >
+                      {copiedReferral ? <Check size={12} /> : <Copy size={12} />}
+                      {copiedReferral ? "Copied!" : "Copy"}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 mt-4">
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just joined the @GreenWaveCoin waitlist — earn GWC tokens by contributing CPU compute to AI research. Join here: ${referralLink}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
+                      style={{ background: "rgba(29,161,242,0.1)", color: "#1da1f2", border: "1px solid rgba(29,161,242,0.2)" }}
+                    >
+                      Share on X
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -300,6 +361,23 @@ function WaitlistSection() {
                     background: "rgba(7,20,40,0.8)",
                     border: "1px solid rgba(51,65,85,0.4)",
                     color: "#f0f9ff",
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Referral code (optional — e.g. ABC12345)"
+                  value={referredByInput}
+                  onChange={e => setReferredByInput(e.target.value.toUpperCase())}
+                  maxLength={12}
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  style={{
+                    background: "rgba(7,20,40,0.8)",
+                    border: referredByInput ? "1px solid rgba(245,158,11,0.4)" : "1px solid rgba(51,65,85,0.4)",
+                    color: referredByInput ? "#f59e0b" : "#f0f9ff",
+                    fontFamily: "JetBrains Mono, monospace",
+                    letterSpacing: referredByInput ? "0.1em" : "normal",
                   }}
                 />
               </div>

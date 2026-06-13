@@ -133,3 +133,12 @@
 - [x] Pre-fill CoinGecko listing application (ready to submit once liquidity pool is live)
 - [x] Pre-fill CoinMarketCap listing application (ready to submit once liquidity pool is live)
 - [x] Add worker auto-update version check on startup (v1.0.4)
+
+## Phase 18 — Growth & Community
+
+- [x] Submit Trust Wallet assets PR with GWC logo
+- [x] Build investor pitch deck (PDF + slides)
+- [x] Write Gitcoin Grants application
+- [x] Write Discord server setup guide (channels, rules, welcome message)
+- [x] Add referral system to waitlist (referral link, position boost)
+- [ ] Worker v1.0.5 — live task counter in GUI

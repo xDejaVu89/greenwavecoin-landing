@@ -16,7 +16,10 @@ import {
   getPublishedPosts,
   getUserBadges,
   getWaitlistCount,
+  getWaitlistEntryByCode,
   getWorkerProfile,
+  generateReferralCode,
+  getReferralCount,
   joinWaitlist,
   setCacheEntry,
   updatePost,
@@ -83,11 +86,13 @@ export const appRouter = router({
             .min(26, "Invalid wallet address")
             .max(64, "Invalid wallet address"),
           email: z.string().email("Invalid email").optional().or(z.literal("")),
+          referredBy: z.string().max(12).optional(), // referral code of the person who referred this user
         })
       )
       .mutation(async ({ input }) => {
         const wallet = input.walletAddress.trim();
         const email = input.email?.trim() || undefined;
+        const referredBy = input.referredBy?.trim().toUpperCase() || undefined;
 
         const exists = await walletAlreadyOnWaitlist(wallet);
         if (exists) {
@@ -97,14 +102,35 @@ export const appRouter = router({
           });
         }
 
-        await joinWaitlist({ walletAddress: wallet, email: email ?? null });
+        // Validate referral code if provided
+        let validatedReferredBy: string | undefined = undefined;
+        if (referredBy) {
+          const referrer = await getWaitlistEntryByCode(referredBy);
+          if (referrer) validatedReferredBy = referredBy;
+        }
+
+        // Generate a unique referral code for this new user
+        let referralCode = generateReferralCode();
+        // Retry up to 5 times on collision (extremely unlikely)
+        for (let i = 0; i < 5; i++) {
+          const collision = await getWaitlistEntryByCode(referralCode);
+          if (!collision) break;
+          referralCode = generateReferralCode();
+        }
+
+        await joinWaitlist({
+          walletAddress: wallet,
+          email: email ?? null,
+          referralCode,
+          referredBy: validatedReferredBy ?? null,
+        });
 
         const total = await getWaitlistCount();
 
         // Notify owner
         await notifyOwner({
           title: "New Waitlist Registration",
-          content: `Wallet: ${wallet}${email ? `\nEmail: ${email}` : ""}\nTotal on waitlist: ${total}`,
+          content: `Wallet: ${wallet}${email ? `\nEmail: ${email}` : ""}\nReferral code: ${referralCode}${validatedReferredBy ? `\nReferred by: ${validatedReferredBy}` : ""}\nTotal on waitlist: ${total}`,
         }).catch(() => {});
 
         // Send confirmation email to subscriber if email provided
@@ -112,7 +138,15 @@ export const appRouter = router({
           await sendWaitlistConfirmation({ email, walletAddress: wallet, position: total }).catch(() => {});
         }
 
-        return { success: true, position: total };
+        return { success: true, position: total, referralCode };
+      }),
+
+    getReferralStats: publicProcedure
+      .input(z.object({ referralCode: z.string().max(12) }))
+      .query(async ({ input }) => {
+        const code = input.referralCode.trim().toUpperCase();
+        const count = await getReferralCount(code);
+        return { referralCount: count };
       }),
   }),
 

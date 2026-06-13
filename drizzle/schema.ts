@@ -32,6 +32,8 @@ export const waitlist = mysqlTable("waitlist", {
   id: int("id").autoincrement().primaryKey(),
   walletAddress: varchar("walletAddress", { length: 64 }).notNull().unique(),
   email: varchar("email", { length: 320 }),
+  referralCode: varchar("referralCode", { length: 12 }).unique(), // own shareable code
+  referredBy: varchar("referredBy", { length: 12 }), // code of the person who referred this user
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
