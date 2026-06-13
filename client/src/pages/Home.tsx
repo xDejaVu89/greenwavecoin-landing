@@ -16,8 +16,8 @@ import {
   CheckCircle2, Clock, ChevronDown, ChevronUp, Menu, X
 } from "lucide-react";
 
-const COORDINATOR_URL = "http://167.99.233.130";
-const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.2/GreenWaveCoin-Worker.exe";
+const COORDINATOR_URL = "https://api.greenwavecoin.com";
+const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.3/GreenWaveCoin-Worker.exe";
 const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
 const GWC_TOKEN = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9";
 const ESCROW_ADDR = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86";
@@ -393,7 +393,7 @@ function LiveTasksTicker() {
   useEffect(() => {
     // Poll the coordinator every 30 seconds for real task count
     const poll = () => {
-      fetch("http://167.99.233.130/api/ai/status")
+      fetch("https://api.greenwavecoin.com/api/ai/status")
         .then(r => r.json())
         .then((d: { total_tasks?: number }) => {
           if (typeof d.total_tasks === "number") setCount(d.total_tasks);
@@ -590,7 +590,7 @@ export default function Home() {
                 </Button>
               </a>
               <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: "#475569" }}>
-                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.2</span>
+                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.3</span>
                 <span>·</span>
                 <span>11 MB</span>
                 <span>·</span>
@@ -1134,7 +1134,7 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.2</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.3</span>
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(100,116,139,0.15)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.2)" }}>11 MB</span>
                   </div>
                   <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
@@ -1143,6 +1143,17 @@ export default function Home() {
                   <ChevronRight size={20} style={{ color: "#06b6d4" }} />
                 </div>
               </a>
+
+              {/* ── SmartScreen callout ── */}
+              <div className="flex items-start gap-3 rounded-xl px-4 py-3 mb-4" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.2)" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z" fill="#eab308"/>
+                </svg>
+                <div>
+                  <p className="text-xs font-semibold mb-0.5" style={{ color: "#eab308" }}>First time on Windows?</p>
+                  <p className="text-xs" style={{ color: "#94a3b8" }}>Windows may show a SmartScreen warning for new apps. Click <strong style={{ color: "#e2e8f0" }}>"More info"</strong> then <strong style={{ color: "#e2e8f0" }}>"Run anyway"</strong> — the app is open source and safe. <a href="https://github.com/xDejaVu89/greenwavecoin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#06b6d4" }}>Verify the source code on GitHub.</a></p>
+                </div>
+              </div>
 
               {/* ── Steps ── */}
               <div className="space-y-3 mb-6">
@@ -1307,6 +1318,7 @@ export default function Home() {
             <p className="text-xs" style={{ color: "#334155" }}>© 2026 GreenWaveCoin. Open source under MIT License.</p>
             <div className="flex items-center gap-4">
               <a href="/privacy" className="text-xs hover:text-[#06b6d4] transition-colors" style={{ color: "#334155" }}>Privacy Policy</a>
+              <a href="/terms" className="text-xs hover:text-[#06b6d4] transition-colors" style={{ color: "#334155" }}>Terms of Service</a>
               <p className="text-xs" style={{ color: "#334155" }}>Polygon Mainnet — Live</p>
             </div>
           </div>
