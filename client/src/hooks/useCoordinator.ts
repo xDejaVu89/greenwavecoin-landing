@@ -60,8 +60,9 @@ export function useNetworkStats(refetchInterval = 30_000) {
     return () => clearInterval(id);
   }, [fetch_, refetchInterval]);
 
+  // Default to "ok" while loading — only show "offline" on confirmed error or explicit "unknown" from coordinator
   const status =
-    isError ? "offline" : data?.networkStatus === "unknown" ? "offline" : "ok";
+    isError ? "offline" : (data !== null && data.networkStatus === "unknown") ? "offline" : "ok";
 
   return {
     status,
