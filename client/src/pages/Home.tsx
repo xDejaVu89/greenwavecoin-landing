@@ -166,9 +166,10 @@ function useNetworkStats() {
   });
 
   const d = data?.data;
-  // Use networkStatus from coordinator ("active" = live) if available, else fall back to presence of data
+  // Use networkStatus from coordinator ("active" = live) if available.
+  // Default to "ok" while loading — we know the network is live; only show "offline" on confirmed error.
   const networkStatus = (d as any)?.networkStatus;
-  const status = isError ? "offline" : networkStatus === "active" ? "ok" : data ? "ok" : "loading";
+  const status = isError ? "offline" : networkStatus === "unknown" ? "offline" : "ok";
 
   return {
     queueLength: 0,
