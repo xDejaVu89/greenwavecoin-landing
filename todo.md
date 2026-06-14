@@ -141,4 +141,4 @@
 - [x] Write Gitcoin Grants application
 - [x] Write Discord server setup guide (channels, rules, welcome message)
 - [x] Add referral system to waitlist (referral link, position boost)
-- [ ] Worker v1.0.5 — live task counter in GUI
+- [x] Worker v1.0.5 — live task counter in GUI
