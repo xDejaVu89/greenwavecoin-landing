@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://api.greenwavecoin.com";
-const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.6/GreenWaveCoin-Worker.exe";
+const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.7/GreenWaveCoin-Worker.exe";
 const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
 const GWC_TOKEN = "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2";
 const ESCROW_ADDR = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86";
@@ -643,7 +643,7 @@ export default function Home() {
                 </Button>
               </a>
               <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: "#475569" }}>
-                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.6</span>
+                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.7</span>
                 <span>·</span>
                 <span>11 MB</span>
                 <span>·</span>
@@ -1187,7 +1187,7 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.6</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.7</span>
                     <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(100,116,139,0.15)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.2)" }}>11 MB</span>
                   </div>
                   <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
