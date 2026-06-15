@@ -181,7 +181,7 @@ export const appRouter = router({
     getPrice: publicProcedure.query(async () => {
       // GeckoTerminal API — free, no key required
       // Once a QuickSwap pool exists for GWC, replace PAIR_ADDRESS with the actual pair address
-      const GWC_CONTRACT = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9";
+      const GWC_CONTRACT = "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2";
       const GECKO_URL = `https://api.geckoterminal.com/api/v2/networks/polygon_pos/tokens/${GWC_CONTRACT}`;
 
       const result = await fetchWithCache<{

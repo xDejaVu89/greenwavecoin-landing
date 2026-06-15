@@ -144,7 +144,7 @@ export default function Grants() {
                   { label: "Project Name", value: "GreenWaveCoin (GWC)" },
                   { label: "Category", value: "DeFi Infrastructure / Decentralised Compute" },
                   { label: "Network", value: "Polygon Mainnet" },
-                  { label: "Token Contract", value: "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9" },
+                  { label: "Token Contract", value: "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2" },
                   { label: "GitHub", value: "https://github.com/xDejaVu89/greenwavecoin" },
                   { label: "Requested Amount", value: "$10,000 – $25,000 USD equivalent in MATIC/POL" },
                 ].map(row => (
@@ -229,7 +229,7 @@ All code is MIT-licensed and publicly available on GitHub. The project has no ve
                 <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "#10b981" }}>Current Deployment Status</div>
                 <div className="space-y-2">
                   {[
-                    { label: "GWC Token", addr: "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9", status: "Deployed & verified" },
+                    { label: "GWC Token", addr: "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2", status: "Deployed & verified" },
                     { label: "Staking Contract", addr: "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86", status: "Funded with 2.1M GWC" },
                     { label: "Timelock", addr: "0xC3F5B6f9E9b531146D23F702AbE930318159Ed02", status: "Deployed & verified" },
                     { label: "RewardEscrowV2", addr: "0xB73385634051a14Be22B2973Fc530A122e3548B0", status: "Funded with 4,985,000 GWC" },

@@ -309,7 +309,7 @@ export default function Dashboard() {
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { icon: <Github size={16} />, label: "Source Code", href: "https://github.com/xDejaVu89/greenwavecoin", desc: "View the open-source codebase" },
-            { icon: <ExternalLink size={16} />, label: "Polygonscan", href: "https://polygonscan.com/address/0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9", desc: "Verify the smart contract" },
+            { icon: <ExternalLink size={16} />, label: "Polygonscan", href: "https://polygonscan.com/address/0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2", desc: "Verify the smart contract" },
             { icon: <Cpu size={16} />, label: "Download Worker", href: "/#run-worker", desc: "Get the latest worker client" },
           ].map(l => (
             <a key={l.label} href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"

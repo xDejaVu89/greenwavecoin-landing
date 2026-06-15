@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const REWARD_POOL_ADDRESS = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86" as const;
-const GWC_TOKEN_ADDRESS = "0x11b48853Ce85Ebf4b1a0AEd9cbE1c951017E16F9" as const;
+const GWC_TOKEN_ADDRESS = "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2" as const;
 const COORDINATOR_URL = "https://api.greenwavecoin.com";
 
 // RewardEscrowV2 ABI — Merkle-based claim with index
