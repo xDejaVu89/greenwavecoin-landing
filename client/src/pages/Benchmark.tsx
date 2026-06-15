@@ -10,7 +10,7 @@ import {
   ChevronDown, Info, Download
 } from "lucide-react";
 
-const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.5/GreenWaveCoin-Worker.exe";
+const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.6/GreenWaveCoin-Worker.exe";
 const GITHUB_URL = "https://github.com/xDejaVu89/greenwavecoin";
 
 // ─── CPU Presets ─────────────────────────────────────────────────────────────
