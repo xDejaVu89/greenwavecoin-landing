@@ -27,8 +27,8 @@ export default function Dashboard() {
   const coordinatorStats = { total_tasks: totalResults, active_workers: uniqueWorkers, current_epoch: currentEpoch, best_accuracy: bestAccuracy };
 
   const { data: rawLb } = useLeaderboard(60_000);
-  const leaderboard: { wallet: string; tasks: number; rank: number }[] = rawLb.map(
-    (e: { wallet: string; tasks: number }, i: number) => ({ ...e, rank: i + 1 })
+  const leaderboard: { wallet: string; validTasks: number; rank: number }[] = rawLb.map(
+    (e, i: number) => ({ wallet: e.wallet, validTasks: e.validTasks, rank: i + 1 })
   );
 
   const [walletInput, setWalletInput] = useState("");
@@ -180,11 +180,11 @@ export default function Dashboard() {
                   <div className="mt-3 rounded-lg" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.2)" }}>
                     <div className="flex items-center gap-2 p-3">
                       <Trophy size={14} className="text-[#f59e0b]" />
-                      <span className="text-sm flex-1" style={{ color: "#f0f9ff" }}>Rank <strong>#{myRank.rank}</strong> — {myRank.tasks.toLocaleString()} tasks</span>
+                      <span className="text-sm flex-1" style={{ color: "#f0f9ff" }}>Rank <strong>#{myRank.rank}</strong> — {myRank.validTasks.toLocaleString()} tasks</span>
                     </div>
                     <div className="px-3 pb-3">
                       <a
-                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I'm rank #${myRank.rank} on the GreenWaveCoin network with ${myRank.tasks.toLocaleString()} tasks completed! 🌊⚡\n\nContributing idle CPU power to advance AI research — and earning GWC tokens for it.\n\nJoin the network: ${window.location.origin}\n\n#GreenWaveCoin #GWC #DeFi #AI`)}`}
+                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I'm rank #${myRank.rank} on the GreenWaveCoin network with ${myRank.validTasks.toLocaleString()} tasks completed! 🌊⚡\n\nContributing idle CPU power to advance AI research — and earning GWC tokens for it.\n\nJoin the network: ${window.location.origin}\n\n#GreenWaveCoin #GWC #DeFi #AI`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -232,7 +232,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-                {leaderboard.slice(0, 20).map((entry: { wallet: string; tasks: number; rank: number }) => {
+                {leaderboard.slice(0, 20).map((entry) => {
                   const isMe = profile?.walletAddress?.toLowerCase() === entry.wallet.toLowerCase();
                   return (
                     <div
@@ -249,7 +249,7 @@ export default function Dashboard() {
                       <code className="flex-1 text-xs truncate" style={{ color: isMe ? "#06b6d4" : "#94a3b8", fontFamily: "JetBrains Mono, monospace" }}>
                         {truncate(entry.wallet)}{isMe && " (you)"}
                       </code>
-                      <span className="text-xs font-mono font-semibold" style={{ color: "#f0f9ff" }}>{entry.tasks.toLocaleString()}</span>
+                      <span className="text-xs font-mono font-semibold" style={{ color: "#f0f9ff" }}>{entry.validTasks.toLocaleString()}</span>
                       <span className="text-xs" style={{ color: "#475569" }}>tasks</span>
                     </div>
                   );
@@ -273,7 +273,7 @@ export default function Dashboard() {
               { milestone: "top_10" as const, label: "Top 10", emoji: "🏆", desc: "Reach top 10 on leaderboard", threshold: 0 },
             ]).map(b => {
               const earned = myBadges?.some(mb => mb.milestone === b.milestone);
-              const myTasks = myRank?.tasks ?? 0;
+              const myTasks = myRank?.validTasks ?? 0;
               const isTop10 = myRank ? myRank.rank <= 10 : false;
               const eligible = b.milestone === "top_10" ? isTop10 : myTasks >= b.threshold;
               return (

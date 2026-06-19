@@ -23,9 +23,12 @@ export interface NetworkStats {
 }
 
 export interface LeaderEntry {
+  rank: number;
   wallet: string;
-  tasks: number;
-  avgAccuracy?: number;
+  validTasks: number;
+  totalTasks: number;
+  accuracy: number | null;
+  lastSeen: number;
 }
 
 export interface GWCPrice {
@@ -87,7 +90,7 @@ export function useLeaderboard(refetchInterval = 60_000) {
 
   const fetch_ = useCallback(async () => {
     try {
-      const res = await fetch(`${COORDINATOR_URL}/api/ai/leaderboard`, {
+      const res = await fetch(`${COORDINATOR_URL}/api/results/leaderboard`, {
         signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

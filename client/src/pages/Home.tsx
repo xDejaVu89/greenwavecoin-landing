@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 
 const COORDINATOR_URL = "https://api.greenwavecoin.com";
-const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.9/GreenWaveCoin-Worker.exe";
+const DOWNLOAD_EXE_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.10/GreenWaveCoin-Worker.exe";
+const DOWNLOAD_MAC_URL = "https://github.com/xDejaVu89/greenwavecoin/releases/download/v1.0.10/GreenWaveCoin-Worker";
 const EXE_SHA256 = "ad409c4a3a055775c700ef0bf6aef0e6c76f4c2c0eef8023f17d9e7a178045b4";
 const GWC_TOKEN = "0x7709cD433dCCf28467d2c9084f4d4db89f3E87B2";
 const ESCROW_ADDR = "0x6a5e4DE78a5Be75c308fCb5833ECC35412511D86";
@@ -637,17 +638,24 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <a href={DOWNLOAD_EXE_URL} download="GreenWaveCoin-Worker.exe">
-                <Button size="lg" className="gap-2 font-semibold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}>
-                  Download for Windows <ArrowRight size={18} />
-                </Button>
-              </a>
+              <div className="flex flex-wrap gap-3">
+                <a href={DOWNLOAD_EXE_URL} download="GreenWaveCoin-Worker.exe">
+                  <Button size="lg" className="gap-2 font-semibold" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)", color: "#020b18", border: "none" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h11.5v11.5H0V0zm12.5 0H24v11.5H12.5V0zM0 12.5h11.5V24H0V12.5zm12.5 0H24V24H12.5V12.5z"/></svg>
+                    Windows <ArrowRight size={16} />
+                  </Button>
+                </a>
+                <a href={DOWNLOAD_MAC_URL} download="GreenWaveCoin-Worker">
+                  <Button size="lg" variant="outline" className="gap-2 font-semibold" style={{ borderColor: "rgba(6,182,212,0.4)", color: "#06b6d4", background: "rgba(6,182,212,0.05)" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    macOS <ArrowRight size={16} />
+                  </Button>
+                </a>
+              </div>
               <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: "#475569" }}>
-                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.9</span>
+                <span style={{ color: "#10b981", fontWeight: 600 }}>v1.0.10</span>
                 <span>·</span>
-                <span>11 MB</span>
-                <span>·</span>
-                <span>Windows 10+</span>
+                <span>Windows 10+ / macOS 12+</span>
               </div>
               <a href="#how-it-works">
                 <Button size="lg" variant="outline" className="gap-2" style={{ borderColor: "rgba(6, 182, 212, 0.4)", color: "#06b6d4", background: "rgba(6, 182, 212, 0.05)" }}>
@@ -965,9 +973,9 @@ export default function Home() {
                     <CopyButton text={w.wallet} />
                   </div>
                   <div className="text-right font-mono-data text-sm" style={{ fontFamily: "JetBrains Mono, monospace" }}>
-                    <span style={{ color: "#06b6d4" }}>{w.tasks}</span>
+                    <span style={{ color: "#06b6d4" }}>{w.validTasks}</span>
                     <span style={{ color: "#475569" }}> / </span>
-                    <span style={{ color: "#10b981" }}>{((w.avgAccuracy ?? 0) * 100).toFixed(1)}%</span>
+                    <span style={{ color: "#10b981" }}>{((w.accuracy ?? 0) * 100).toFixed(1)}%</span>
                   </div>
                 </div>
               ))
@@ -1168,34 +1176,46 @@ export default function Home() {
                 Download the free Windows app, enter your wallet address, and click Start. No Python, no terminal, no setup.
               </p>
 
-              {/* ── Primary Download CTA ── */}
-              <a
-                href={DOWNLOAD_EXE_URL}
-                download="GreenWaveCoin-Worker.exe"
-                className="flex items-center gap-4 rounded-2xl p-5 mb-6 transition-all duration-200 hover:scale-[1.02] active:scale-[0.99]"
-                style={{
-                  background: "linear-gradient(135deg, rgba(6,182,212,0.15), rgba(16,185,129,0.15))",
-                  border: "1px solid rgba(6, 182, 212, 0.4)",
-                  textDecoration: "none",
-                }}
-              >
-                <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)" }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 19h18v2H3v-2zm9-3L4 8h5V2h6v6h5l-8 8z" fill="#020b18"/>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.9</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(100,116,139,0.15)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.2)" }}>11 MB</span>
+              {/* ── Primary Download CTAs ── */}
+              <div className="flex flex-col gap-3 mb-6">
+                <a
+                  href={DOWNLOAD_EXE_URL}
+                  download="GreenWaveCoin-Worker.exe"
+                  className="flex items-center gap-4 rounded-2xl p-5 transition-all duration-200 hover:scale-[1.02] active:scale-[0.99]"
+                  style={{ background: "linear-gradient(135deg, rgba(6,182,212,0.15), rgba(16,185,129,0.15))", border: "1px solid rgba(6, 182, 212, 0.4)", textDecoration: "none" }}
+                >
+                  <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #06b6d4, #10b981)" }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#020b18"><path d="M0 0h11.5v11.5H0V0zm12.5 0H24v11.5H12.5V0zM0 12.5h11.5V24H0V12.5zm12.5 0H24V24H12.5V12.5z"/></svg>
                   </div>
-                  <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
-                </div>
-                <div className="flex-shrink-0">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for Windows</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.10</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(100,116,139,0.15)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.2)" }}>11 MB</span>
+                    </div>
+                    <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker.exe · No install required · Windows 10+</div>
+                  </div>
                   <ChevronRight size={20} style={{ color: "#06b6d4" }} />
-                </div>
-              </a>
+                </a>
+                <a
+                  href={DOWNLOAD_MAC_URL}
+                  download="GreenWaveCoin-Worker"
+                  className="flex items-center gap-4 rounded-2xl p-5 transition-all duration-200 hover:scale-[1.02] active:scale-[0.99]"
+                  style={{ background: "rgba(7,20,40,0.6)", border: "1px solid rgba(100,116,139,0.3)", textDecoration: "none" }}
+                >
+                  <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: "rgba(100,116,139,0.2)" }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#94a3b8"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <div className="font-bold text-lg" style={{ color: "#e2e8f0", fontFamily: "Syne, sans-serif" }}>Download for macOS</div>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>v1.0.10</span>
+                    </div>
+                    <div className="text-sm" style={{ color: "#64748b" }}>GreenWaveCoin-Worker · macOS 12+ · Apple Silicon &amp; Intel</div>
+                  </div>
+                  <ChevronRight size={20} style={{ color: "#475569" }} />
+                </a>
+              </div>
 
               {/* ── SmartScreen callout ── */}
               <div className="flex items-start gap-3 rounded-xl px-4 py-3 mb-4" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.2)" }}>

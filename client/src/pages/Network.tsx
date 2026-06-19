@@ -163,7 +163,7 @@ export default function Network() {
                     </code>
                   </div>
                   <div className="col-span-2 text-right">
-                    <span className="text-sm font-mono font-semibold" style={{ color: "#f0f9ff" }}>{entry.tasks.toLocaleString()}</span>
+                    <span className="text-sm font-mono font-semibold" style={{ color: "#f0f9ff" }}>{entry.validTasks.toLocaleString()}</span>
                   </div>
                   <div className="col-span-2 text-right">
                     <a href={`${POLYGONSCAN_URL}${entry.wallet}`} target="_blank" rel="noopener noreferrer">
